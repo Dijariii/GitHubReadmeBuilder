@@ -24,6 +24,7 @@ import { Plus, Trash2 } from "lucide-react";
 import * as SiIcons from "react-icons/si";
 import type { IconType } from "react-icons";
 import React from 'react';
+import { AnalyticsConfig } from "./analytics-config";
 
 interface ReadmeFormProps {
   onSubmit: (data: ReadmeFormData) => void;
@@ -258,7 +259,7 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
         </div>
 
         <div className="space-y-4 border rounded-lg p-4">
-          <h3 className="font-medium">GitHub Stats Configuration</h3>
+          <h3 className="font-medium">GitHub Configuration</h3>
 
           <FormField
             control={form.control}
@@ -348,6 +349,7 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
               </FormItem>
             )}
           />
+          <AnalyticsConfig form={form} />
         </div>
 
         <div className="space-y-2">

@@ -100,9 +100,26 @@ function generateMarkdown(data: ReadmeFormData): string {
   ` : ''}
 </div>` : '';
 
+  const analyticsSection = `
+<div align="center">
+  ${data.analytics.showContributionGraph ? `
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=${data.githubUsername}&theme=${data.analytics.graphStyle}" alt="Contribution Graph" />
+  ` : ''}
+
+  ${data.analytics.showActivityGraph ? `
+  <img src="https://activity-graph.herokuapp.com/graph?username=${data.githubUsername}&theme=${data.analytics.graphStyle}&hide_border=true" alt="Activity Graph" />
+  ` : ''}
+
+  ${data.analytics.showCommitStats ? `
+  <img src="https://github-readme-stats.vercel.app/api/wakatime?username=${data.githubUsername}&layout=compact&theme=dark" alt="Coding Stats" />
+  ` : ''}
+</div>`;
+
   return `# Hi there! I'm ${data.name} 👋
 
 ${statsSection}
+
+${analyticsSection}
 
 ## About Me
 ${data.bio}

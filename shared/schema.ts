@@ -77,7 +77,29 @@ export const readmeFormSchema = z.object({
     theme: z.enum(["flat", "onedark", "gruvbox", "dracula", "monokai"]).default("flat"),
     row: z.number().min(1).max(6).default(2),
     column: z.number().min(1).max(6).default(3)
-  }).default({})
+  }).default({}),
+  analytics: z.object({
+    showContributionGraph: z.boolean().default(true),
+    showActivityGraph: z.boolean().default(true),
+    showCommitStats: z.boolean().default(true),
+    timeRange: z.enum(["last_7_days", "last_30_days", "last_year"]).default("last_30_days"),
+    graphStyle: z.enum(["normal", "dracula", "github", "tokyo-night"]).default("github"),
+    includePrivateRepos: z.boolean().default(false),
+  }).default({}),
 });
 
 export type ReadmeFormData = z.infer<typeof readmeFormSchema>;
+
+// Analytics graph themes
+export const GRAPH_THEMES = [
+  { name: "normal", label: "Default" },
+  { name: "dracula", label: "Dracula" },
+  { name: "github", label: "GitHub" },
+  { name: "tokyo-night", label: "Tokyo Night" },
+] as const;
+
+export const TIME_RANGES = [
+  { value: "last_7_days", label: "Last 7 Days" },
+  { value: "last_30_days", label: "Last 30 Days" },
+  { value: "last_year", label: "Last Year" },
+] as const;
