@@ -60,7 +60,7 @@ export function Preview({ markdown, onCopy }: PreviewProps) {
           {markdown}
         </pre>
       ) : (
-        <div className="prose max-w-none dark:prose-invert border rounded-md p-4 bg-white">
+        <div className="prose max-w-none dark:prose-invert border rounded-md p-4 bg-white text-foreground">
           {markdown ? (
             <ReactMarkdown>{markdown}</ReactMarkdown>
           ) : (
