@@ -21,7 +21,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, Trash2 } from "lucide-react";
-import { SiGithub, SiLinkedin, SiFacebook, SiInstagram, SiYoutube, SiMedium, SiDevdotto, SiStackoverflow, SiCodepen } from "react-icons/si";
+import * as SiIcons from "react-icons/si";
+import type { IconType } from "react-icons";
+import React from 'react';
 
 interface ReadmeFormProps {
   onSubmit: (data: ReadmeFormData) => void;
@@ -30,16 +32,16 @@ interface ReadmeFormProps {
 const TROPHY_THEMES = ["flat", "onedark", "gruvbox", "dracula", "monokai"] as const;
 const PROFICIENCY_LEVELS = ["Beginner", "Intermediate", "Advanced"] as const;
 
-const SOCIAL_ICONS: Record<string, React.ComponentType> = {
-  GitHub: SiGithub,
-  LinkedIn: SiLinkedin,
-  Facebook: SiFacebook,
-  Instagram: SiInstagram,
-  YouTube: SiYoutube,
-  Medium: SiMedium,
-  "Dev.to": SiDevdotto,
-  "Stack Overflow": SiStackoverflow,
-  CodePen: SiCodepen,
+const SOCIAL_ICONS: Record<string, IconType> = {
+  GitHub: SiIcons.SiGithub,
+  LinkedIn: SiIcons.SiLinkedin,
+  Facebook: SiIcons.SiFacebook,
+  Instagram: SiIcons.SiInstagram,
+  YouTube: SiIcons.SiYoutube,
+  Medium: SiIcons.SiMedium,
+  "Dev.to": SiIcons.SiDevdotto,
+  "Stack Overflow": SiIcons.SiStackoverflow,
+  CodePen: SiIcons.SiCodepen,
 };
 
 export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
@@ -365,20 +367,23 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
                         <SelectValue placeholder="Select platform" />
                       </SelectTrigger>
                       <SelectContent>
-                        {SOCIAL_PLATFORMS.map((platform) => (
-                          <SelectItem
-                            key={platform.name}
-                            value={platform.name}
-                            className="flex items-center gap-2"
-                          >
-                            {SOCIAL_ICONS[platform.name] && (
-                              <div className="w-4 h-4">
-                                {React.createElement(SOCIAL_ICONS[platform.name])}
-                              </div>
-                            )}
-                            {platform.name}
-                          </SelectItem>
-                        ))}
+                        {SOCIAL_PLATFORMS.map((platform) => {
+                          const Icon = SOCIAL_ICONS[platform.name];
+                          return (
+                            <SelectItem
+                              key={platform.name}
+                              value={platform.name}
+                              className="flex items-center gap-2"
+                            >
+                              {Icon && (
+                                <div className="w-4 h-4">
+                                  <Icon />
+                                </div>
+                              )}
+                              {platform.name}
+                            </SelectItem>
+                          );
+                        })}
                       </SelectContent>
                     </Select>
                     <FormMessage />
