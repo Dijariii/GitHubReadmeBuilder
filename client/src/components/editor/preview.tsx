@@ -8,6 +8,19 @@ interface PreviewProps {
   onCopy: () => void;
 }
 
+function SampleAnalytics() {
+  return (
+    <div className="space-y-4 p-4 border rounded-md bg-muted/20">
+      <div className="text-sm text-muted-foreground">Sample Analytics Preview</div>
+      <div className="space-y-2">
+        <div className="h-32 bg-gradient-to-r from-primary/20 to-primary/10 rounded-md animate-pulse" />
+        <div className="h-24 bg-gradient-to-r from-primary/15 to-primary/5 rounded-md animate-pulse" />
+        <div className="h-16 bg-gradient-to-r from-primary/10 to-primary/5 rounded-md animate-pulse" />
+      </div>
+    </div>
+  );
+}
+
 export function Preview({ markdown, onCopy }: PreviewProps) {
   const [showRaw, setShowRaw] = useState(false);
 
@@ -62,7 +75,10 @@ export function Preview({ markdown, onCopy }: PreviewProps) {
       ) : (
         <div className="prose max-w-none dark:prose-invert border rounded-md p-4 bg-white text-foreground">
           {markdown ? (
-            <ReactMarkdown>{markdown}</ReactMarkdown>
+            <>
+              <ReactMarkdown>{markdown}</ReactMarkdown>
+              {!markdown.includes('github-readme-activity-graph') && <SampleAnalytics />}
+            </>
           ) : (
             <div className="text-muted-foreground text-center py-8">
               Your README preview will appear here
