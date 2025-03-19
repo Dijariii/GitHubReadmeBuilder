@@ -2,7 +2,7 @@ import { ReadmeForm } from "@/components/editor/readme-form";
 import { Preview } from "@/components/editor/preview";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { ReadmeFormData, PROGRAMMING_LANGUAGES } from "@shared/schema";
+import { ReadmeFormData, PROGRAMMING_LANGUAGES, SOCIAL_PLATFORMS } from "@shared/schema";
 import { Card } from "@/components/ui/card";
 
 export default function Home() {
@@ -72,7 +72,11 @@ function generateMarkdown(data: ReadmeFormData): string {
     .join('\n');
 
   const socialList = data.socialLinks
-    .map(link => `- [${link.platform}](${link.url})`)
+    .map(link => {
+      const platform = SOCIAL_PLATFORMS.find(p => p.name === link.platform);
+      const url = platform ? `${platform.url}${link.username}` : '';
+      return `- [${link.platform}](${url})`;
+    })
     .join('\n');
 
   const projectsList = data.projects

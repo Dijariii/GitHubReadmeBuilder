@@ -37,6 +37,19 @@ export const PROGRAMMING_LANGUAGES = [
   { name: "Node.js", logo: "https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original.svg" },
 ] as const;
 
+// Add social media platforms list
+export const SOCIAL_PLATFORMS = [
+  { name: "GitHub", url: "https://github.com/" },
+  { name: "LinkedIn", url: "https://linkedin.com/in/" },
+  { name: "Facebook", url: "https://facebook.com/" },
+  { name: "Instagram", url: "https://instagram.com/" },
+  { name: "YouTube", url: "https://youtube.com/" },
+  { name: "Medium", url: "https://medium.com/@" },
+  { name: "Dev.to", url: "https://dev.to/" },
+  { name: "Stack Overflow", url: "https://stackoverflow.com/users/" },
+  { name: "CodePen", url: "https://codepen.io/" },
+] as const;
+
 export const readmeFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
   githubUsername: z.string().min(1, "GitHub username is required"),
@@ -47,8 +60,8 @@ export const readmeFormSchema = z.object({
     proficiency: z.enum(["Beginner", "Intermediate", "Advanced"])
   })).min(1, "At least one programming language is required"),
   socialLinks: z.array(z.object({
-    platform: z.string(),
-    url: z.string().url("Must be a valid URL")
+    platform: z.enum([...SOCIAL_PLATFORMS.map(p => p.name)] as [string, ...string[]]),
+    username: z.string().min(1, "Username is required")
   })),
   projects: z.array(z.object({
     name: z.string(),

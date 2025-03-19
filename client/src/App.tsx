@@ -6,6 +6,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Guide from "@/pages/guide";
 import { Logo } from "@/components/ui/logo";
+import { SiGithub } from "react-icons/si";
 
 function Nav() {
   return (
@@ -16,12 +17,20 @@ function Nav() {
             <Logo />
           </a>
         </Link>
-        <div className="flex gap-6">
+        <div className="flex gap-6 items-center">
           <Link href="/guide">
             <a className="text-muted-foreground hover:text-foreground transition-colors font-medium">
               How to Create
             </a>
           </Link>
+          <a 
+            href="https://github.com/Dijariii/Readme-Gen" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <SiGithub className="w-6 h-6" />
+          </a>
         </div>
       </div>
     </nav>

@@ -1,6 +1,7 @@
 import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
-import { Copy, Download } from 'lucide-react';
+import { Copy, Download, Code, Eye } from 'lucide-react';
+import { useState } from 'react';
 
 interface PreviewProps {
   markdown: string;
@@ -8,6 +9,8 @@ interface PreviewProps {
 }
 
 export function Preview({ markdown, onCopy }: PreviewProps) {
+  const [showRaw, setShowRaw] = useState(false);
+
   const handleDownload = () => {
     const blob = new Blob([markdown], { type: 'text/markdown' });
     const url = window.URL.createObjectURL(blob);
@@ -25,6 +28,14 @@ export function Preview({ markdown, onCopy }: PreviewProps) {
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-semibold">Preview</h2>
         <div className="flex gap-2">
+          <Button 
+            onClick={() => setShowRaw(!showRaw)}
+            variant="outline"
+            className="text-primary"
+          >
+            {showRaw ? <Eye className="h-4 w-4 mr-2" /> : <Code className="h-4 w-4 mr-2" />}
+            {showRaw ? 'Preview' : 'Raw'}
+          </Button>
           <Button 
             onClick={onCopy}
             variant="outline"
@@ -44,15 +55,21 @@ export function Preview({ markdown, onCopy }: PreviewProps) {
         </div>
       </div>
 
-      <div className="prose max-w-none dark:prose-invert border rounded-md p-4 bg-card">
-        {markdown ? (
-          <ReactMarkdown>{markdown}</ReactMarkdown>
-        ) : (
-          <div className="text-muted-foreground text-center py-8">
-            Your README preview will appear here
-          </div>
-        )}
-      </div>
+      {showRaw ? (
+        <pre className="p-4 bg-white rounded-md border font-mono text-sm overflow-auto whitespace-pre">
+          {markdown}
+        </pre>
+      ) : (
+        <div className="prose max-w-none dark:prose-invert border rounded-md p-4 bg-white">
+          {markdown ? (
+            <ReactMarkdown>{markdown}</ReactMarkdown>
+          ) : (
+            <div className="text-muted-foreground text-center py-8">
+              Your README preview will appear here
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

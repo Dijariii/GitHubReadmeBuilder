@@ -1,6 +1,6 @@
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { readmeFormSchema, type ReadmeFormData, PROGRAMMING_LANGUAGES } from "@shared/schema";
+import { readmeFormSchema, type ReadmeFormData, PROGRAMMING_LANGUAGES, SOCIAL_PLATFORMS } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, Trash2 } from "lucide-react";
+import { SiGithub, SiLinkedin, SiFacebook, SiInstagram, SiYoutube, SiMedium, SiDevdotto, SiStackoverflow, SiCodepen } from "react-icons/si";
 
 interface ReadmeFormProps {
   onSubmit: (data: ReadmeFormData) => void;
@@ -28,6 +29,18 @@ interface ReadmeFormProps {
 
 const TROPHY_THEMES = ["flat", "onedark", "gruvbox", "dracula", "monokai"] as const;
 const PROFICIENCY_LEVELS = ["Beginner", "Intermediate", "Advanced"] as const;
+
+const SOCIAL_ICONS: Record<string, React.ComponentType> = {
+  GitHub: SiGithub,
+  LinkedIn: SiLinkedin,
+  Facebook: SiFacebook,
+  Instagram: SiInstagram,
+  YouTube: SiYoutube,
+  Medium: SiMedium,
+  "Dev.to": SiDevdotto,
+  "Stack Overflow": SiStackoverflow,
+  CodePen: SiCodepen,
+};
 
 export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
   const form = useForm<ReadmeFormData>({
@@ -38,7 +51,7 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
       bio: "",
       skills: [""],
       programmingLanguages: [{ name: PROGRAMMING_LANGUAGES[0].name, proficiency: "Beginner" }],
-      socialLinks: [{ platform: "", url: "" }],
+      socialLinks: [{ platform: SOCIAL_PLATFORMS[0].name, username: "" }],
       projects: [{ name: "", description: "", url: "", technologies: [] }],
       showGitHubStats: true,
       showTrophies: true,
@@ -138,14 +151,14 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
                       </SelectTrigger>
                       <SelectContent>
                         {PROGRAMMING_LANGUAGES.map((lang) => (
-                          <SelectItem 
-                            key={lang.name} 
+                          <SelectItem
+                            key={lang.name}
                             value={lang.name}
                             className="flex items-center gap-2"
                           >
-                            <img 
-                              src={lang.logo} 
-                              alt={lang.name} 
+                            <img
+                              src={lang.logo}
+                              alt={lang.name}
                               className="w-4 h-4"
                             />
                             {lang.name}
@@ -162,7 +175,7 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
                 name={`programmingLanguages.${index}.proficiency`}
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <Select 
+                    <Select
                       value={field.value}
                       onValueChange={field.onChange}
                     >
@@ -195,9 +208,9 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => languagesArray.append({ 
-              name: PROGRAMMING_LANGUAGES[0].name, 
-              proficiency: "Beginner" 
+            onClick={() => languagesArray.append({
+              name: PROGRAMMING_LANGUAGES[0].name,
+              proficiency: "Beginner"
             })}
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -344,20 +357,41 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
                 name={`socialLinks.${index}.platform`}
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormControl>
-                      <Input placeholder="Platform (e.g. GitHub)" {...field} />
-                    </FormControl>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select platform" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SOCIAL_PLATFORMS.map((platform) => (
+                          <SelectItem
+                            key={platform.name}
+                            value={platform.name}
+                            className="flex items-center gap-2"
+                          >
+                            {SOCIAL_ICONS[platform.name] && (
+                              <div className="w-4 h-4">
+                                {React.createElement(SOCIAL_ICONS[platform.name])}
+                              </div>
+                            )}
+                            {platform.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name={`socialLinks.${index}.url`}
+                name={`socialLinks.${index}.username`}
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormControl>
-                      <Input placeholder="URL" {...field} />
+                      <Input placeholder="Username" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -377,7 +411,10 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => socialLinksArray.append({ platform: "", url: "" })}
+            onClick={() => socialLinksArray.append({
+              platform: SOCIAL_PLATFORMS[0].name,
+              username: ""
+            })}
           >
             <Plus className="h-4 w-4 mr-2" />
             Add Social Link
