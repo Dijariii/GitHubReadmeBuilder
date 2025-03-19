@@ -30,9 +30,9 @@ export class MemStorage implements IStorage {
       }
     ];
 
-    defaultTemplates.forEach(template => {
-      this.createTemplate(template);
-    });
+    for (const template of defaultTemplates) {
+      void this.createTemplate(template);
+    }
   }
 
   async getTemplates(): Promise<Template[]> {
@@ -45,7 +45,12 @@ export class MemStorage implements IStorage {
 
   async createTemplate(template: InsertTemplate): Promise<Template> {
     const id = this.currentId++;
-    const newTemplate = { ...template, id };
+    const newTemplate: Template = {
+      id,
+      name: template.name,
+      content: template.content,
+      sections: template.sections,
+    };
     this.templates.set(id, newTemplate);
     return newTemplate;
   }

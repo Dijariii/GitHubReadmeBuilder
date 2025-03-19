@@ -30,14 +30,20 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
     },
   });
 
-  const { fields: skillFields, append: appendSkill, remove: removeSkill } = 
-    useFieldArray({ control: form.control, name: "skills" });
+  const skillsArray = useFieldArray({
+    control: form.control,
+    name: "skills",
+  });
 
-  const { fields: socialFields, append: appendSocial, remove: removeSocial } = 
-    useFieldArray({ control: form.control, name: "socialLinks" });
+  const socialLinksArray = useFieldArray({
+    control: form.control,
+    name: "socialLinks",
+  });
 
-  const { fields: projectFields, append: appendProject, remove: removeProject } = 
-    useFieldArray({ control: form.control, name: "projects" });
+  const projectsArray = useFieldArray({
+    control: form.control,
+    name: "projects",
+  });
 
   return (
     <Form {...form}>
@@ -75,7 +81,7 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
 
         <div className="space-y-2">
           <FormLabel>Skills</FormLabel>
-          {skillFields.map((field, index) => (
+          {skillsArray.fields.map((field, index) => (
             <div key={field.id} className="flex gap-2">
               <FormField
                 control={form.control}
@@ -93,7 +99,7 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
                 type="button"
                 variant="destructive"
                 size="icon"
-                onClick={() => removeSkill(index)}
+                onClick={() => skillsArray.remove(index)}
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
@@ -103,7 +109,7 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => appendSkill("")}
+            onClick={() => skillsArray.append("")}
           >
             <Plus className="h-4 w-4 mr-2" />
             Add Skill
@@ -112,7 +118,7 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
 
         <div className="space-y-2">
           <FormLabel>Social Links</FormLabel>
-          {socialFields.map((field, index) => (
+          {socialLinksArray.fields.map((field, index) => (
             <div key={field.id} className="flex gap-2">
               <FormField
                 control={form.control}
@@ -142,7 +148,7 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
                 type="button"
                 variant="destructive"
                 size="icon"
-                onClick={() => removeSocial(index)}
+                onClick={() => socialLinksArray.remove(index)}
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
@@ -152,7 +158,7 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => appendSocial({ platform: "", url: "" })}
+            onClick={() => socialLinksArray.append({ platform: "", url: "" })}
           >
             <Plus className="h-4 w-4 mr-2" />
             Add Social Link
@@ -161,7 +167,7 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
 
         <div className="space-y-2">
           <FormLabel>Projects</FormLabel>
-          {projectFields.map((field, index) => (
+          {projectsArray.fields.map((field, index) => (
             <div key={field.id} className="space-y-2 p-4 border rounded-md">
               <FormField
                 control={form.control}
@@ -203,7 +209,7 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
                 type="button"
                 variant="destructive"
                 size="sm"
-                onClick={() => removeProject(index)}
+                onClick={() => projectsArray.remove(index)}
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Remove Project
@@ -215,7 +221,7 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
             variant="outline"
             size="sm"
             onClick={() =>
-              appendProject({ name: "", description: "", url: "" })
+              projectsArray.append({ name: "", description: "", url: "" })
             }
           >
             <Plus className="h-4 w-4 mr-2" />
