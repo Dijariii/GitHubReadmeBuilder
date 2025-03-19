@@ -25,4 +25,45 @@
     min-height: 100vh;
     min-height: 100dvh;
   }
+
+  .touch-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  @media (max-width: 640px) {
+    .container {
+      @apply px-4;
+    }
+  }
+
+  @media (min-width: 641px) {
+    .container {
+      @apply px-6;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      @apply px-8;
+    }
+  }
+}
+
+@layer components {
+  .card {
+    @apply transition-shadow duration-200;
+  }
+
+  @media (hover: hover) {
+    .card:hover {
+      @apply shadow-lg;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .card {
+      @apply rounded-lg shadow;
+    }
+  }
 }
