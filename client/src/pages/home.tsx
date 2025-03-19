@@ -2,7 +2,7 @@ import { ReadmeForm } from "@/components/editor/readme-form";
 import { Preview } from "@/components/editor/preview";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { ReadmeFormData } from "@shared/schema";
+import { ReadmeFormData, PROGRAMMING_LANGUAGES } from "@shared/schema";
 import { Card } from "@/components/ui/card";
 
 export default function Home() {
@@ -61,7 +61,10 @@ export default function Home() {
 
 function generateMarkdown(data: ReadmeFormData): string {
   const languagesList = data.programmingLanguages
-    .map(lang => `- ${lang.name} (${lang.proficiency})`)
+    .map(lang => {
+      const langData = PROGRAMMING_LANGUAGES.find(l => l.name === lang.name);
+      return `<img src="${langData?.logo}" alt="${lang.name}" width="40" height="40" /> ${lang.name} (${lang.proficiency})`;
+    })
     .join('\n');
 
   const skillsList = data.skills

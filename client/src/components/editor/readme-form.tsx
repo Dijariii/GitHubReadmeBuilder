@@ -1,6 +1,6 @@
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { readmeFormSchema, type ReadmeFormData } from "@shared/schema";
+import { readmeFormSchema, type ReadmeFormData, PROGRAMMING_LANGUAGES } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -37,7 +37,7 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
       githubUsername: "",
       bio: "",
       skills: [""],
-      programmingLanguages: [{ name: "", proficiency: "Beginner" }],
+      programmingLanguages: [{ name: PROGRAMMING_LANGUAGES[0].name, proficiency: "Beginner" }],
       socialLinks: [{ platform: "", url: "" }],
       projects: [{ name: "", description: "", url: "", technologies: [] }],
       showGitHubStats: true,
@@ -129,9 +129,30 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
                 name={`programmingLanguages.${index}.name`}
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormControl>
-                      <Input placeholder="Language name" {...field} />
-                    </FormControl>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select language" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {PROGRAMMING_LANGUAGES.map((lang) => (
+                          <SelectItem 
+                            key={lang.name} 
+                            value={lang.name}
+                            className="flex items-center gap-2"
+                          >
+                            <img 
+                              src={lang.logo} 
+                              alt={lang.name} 
+                              className="w-4 h-4"
+                            />
+                            {lang.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -174,7 +195,10 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => languagesArray.append({ name: "", proficiency: "Beginner" })}
+            onClick={() => languagesArray.append({ 
+              name: PROGRAMMING_LANGUAGES[0].name, 
+              proficiency: "Beginner" 
+            })}
           >
             <Plus className="h-4 w-4 mr-2" />
             Add Language
