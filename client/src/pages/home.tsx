@@ -36,7 +36,7 @@ export default function Home() {
         <div className="mb-8 text-center">
           <h1 className="text-4xl font-bold mb-4">Create Your GitHub Profile README</h1>
           <p className="text-muted-foreground text-lg">
-            Generate a professional README for your GitHub profile in minutes
+            Generate an awesome README for your GitHub profile in minutes
           </p>
         </div>
 
@@ -49,32 +49,72 @@ export default function Home() {
             <Preview markdown={markdown} onCopy={handleCopy} />
           </Card>
         </div>
+
+        <footer className="mt-8 text-center text-muted-foreground">
+          <p>Made with ❤️ by Dijari in 🇽🇰</p>
+          <p>For support: <a href="mailto:dejxhar@gmail.com" className="text-primary hover:underline">dejxhar@gmail.com</a></p>
+        </footer>
       </div>
     </main>
   );
 }
 
 function generateMarkdown(data: ReadmeFormData): string {
-  const skillsList = data.skills.map(skill => `- ${skill}`).join('\n');
+  const languagesList = data.programmingLanguages
+    .map(lang => `- ${lang.name} (${lang.proficiency})`)
+    .join('\n');
+
+  const skillsList = data.skills
+    .map(skill => `- ${skill}`)
+    .join('\n');
+
   const socialList = data.socialLinks
     .map(link => `- [${link.platform}](${link.url})`)
     .join('\n');
+
   const projectsList = data.projects
     .map(project => `### ${project.name}\n${project.description}\n[View Project](${project.url})`)
     .join('\n\n');
 
+  const statsSection = data.showGitHubStats ? `
+<div align="center">
+  ${data.showTrophies ? `
+  <img src="https://github-profile-trophy.vercel.app/?username=${data.githubUsername}&theme=${data.customizeTrophy.theme}&row=${data.customizeTrophy.row}&column=${data.customizeTrophy.column}" alt="Trophies" />
+  ` : ''}
+
+  <img src="https://github-readme-stats.vercel.app/api?username=${data.githubUsername}&show_icons=true&theme=dark" alt="GitHub Stats" />
+
+  ${data.showStreak ? `
+  <img src="https://github-readme-streak-stats.herokuapp.com/?user=${data.githubUsername}&theme=dark" alt="GitHub Streak" />
+  ` : ''}
+
+  ${data.showLanguageStats ? `
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=${data.githubUsername}&layout=compact&theme=dark" alt="Top Languages" />
+  ` : ''}
+</div>` : '';
+
   return `# Hi there! I'm ${data.name} 👋
+
+${statsSection}
 
 ## About Me
 ${data.bio}
 
-## Skills
+## 💻 Languages and Tools
+${languagesList}
+
+## 🛠 Skills
 ${skillsList}
 
-## Connect with me
+## 🤝 Connect with me
 ${socialList}
 
-## Projects
+## 📂 Projects
 ${projectsList}
-`;
+
+---
+<div align="center">
+Made with ❤️ by Dijari in 🇽🇰<br>
+For support: dejxhar@gmail.com
+</div>`;
 }

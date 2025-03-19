@@ -12,27 +12,54 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Switch } from "@/components/ui/switch";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Plus, Trash2 } from "lucide-react";
 
 interface ReadmeFormProps {
   onSubmit: (data: ReadmeFormData) => void;
 }
 
+const TROPHY_THEMES = ["flat", "onedark", "gruvbox", "dracula", "monokai"] as const;
+const PROFICIENCY_LEVELS = ["Beginner", "Intermediate", "Advanced"] as const;
+
 export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
   const form = useForm<ReadmeFormData>({
     resolver: zodResolver(readmeFormSchema),
     defaultValues: {
       name: "",
+      githubUsername: "",
       bio: "",
       skills: [""],
+      programmingLanguages: [{ name: "", proficiency: "Beginner" }],
       socialLinks: [{ platform: "", url: "" }],
-      projects: [{ name: "", description: "", url: "" }],
+      projects: [{ name: "", description: "", url: "", technologies: [] }],
+      showGitHubStats: true,
+      showTrophies: true,
+      showLanguageStats: true,
+      showStreak: true,
+      customizeTrophy: {
+        theme: "flat",
+        row: 2,
+        column: 3
+      }
     },
   });
 
   const skillsArray = useFieldArray({
     control: form.control,
     name: "skills",
+  });
+
+  const languagesArray = useFieldArray({
+    control: form.control,
+    name: "programmingLanguages",
   });
 
   const socialLinksArray = useFieldArray({
@@ -64,6 +91,20 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
 
         <FormField
           control={form.control}
+          name="githubUsername"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>GitHub Username</FormLabel>
+              <FormControl>
+                <Input placeholder="Your GitHub username" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="bio"
           render={({ field }) => (
             <FormItem>
@@ -78,6 +119,67 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
             </FormItem>
           )}
         />
+
+        <div className="space-y-2">
+          <FormLabel>Programming Languages</FormLabel>
+          {languagesArray.fields.map((field, index) => (
+            <div key={field.id} className="flex gap-2">
+              <FormField
+                control={form.control}
+                name={`programmingLanguages.${index}.name`}
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormControl>
+                      <Input placeholder="Language name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`programmingLanguages.${index}.proficiency`}
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <Select 
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select proficiency" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {PROFICIENCY_LEVELS.map((level) => (
+                          <SelectItem key={level} value={level}>
+                            {level}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="button"
+                variant="destructive"
+                size="icon"
+                onClick={() => languagesArray.remove(index)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => languagesArray.append({ name: "", proficiency: "Beginner" })}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Language
+          </Button>
+        </div>
 
         <div className="space-y-2">
           <FormLabel>Skills</FormLabel>
@@ -114,6 +216,99 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
             <Plus className="h-4 w-4 mr-2" />
             Add Skill
           </Button>
+        </div>
+
+        <div className="space-y-4 border rounded-lg p-4">
+          <h3 className="font-medium">GitHub Stats Configuration</h3>
+
+          <FormField
+            control={form.control}
+            name="showGitHubStats"
+            render={({ field }) => (
+              <FormItem className="flex items-center justify-between">
+                <FormLabel>Show GitHub Statistics</FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="showTrophies"
+            render={({ field }) => (
+              <FormItem className="flex items-center justify-between">
+                <FormLabel>Show GitHub Trophies</FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="showLanguageStats"
+            render={({ field }) => (
+              <FormItem className="flex items-center justify-between">
+                <FormLabel>Show Language Statistics</FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="showStreak"
+            render={({ field }) => (
+              <FormItem className="flex items-center justify-between">
+                <FormLabel>Show Contribution Streak</FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="customizeTrophy.theme"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Trophy Theme</FormLabel>
+                <Select
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select theme" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TROPHY_THEMES.map((theme) => (
+                      <SelectItem key={theme} value={theme}>
+                        {theme.charAt(0).toUpperCase() + theme.slice(1)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
         </div>
 
         <div className="space-y-2">
@@ -221,7 +416,7 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
             variant="outline"
             size="sm"
             onClick={() =>
-              projectsArray.append({ name: "", description: "", url: "" })
+              projectsArray.append({ name: "", description: "", url: "", technologies: [] })
             }
           >
             <Plus className="h-4 w-4 mr-2" />
