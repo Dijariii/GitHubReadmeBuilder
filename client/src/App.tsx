@@ -35,18 +35,22 @@ function Nav() {
   );
 }
 
-function Router() {
+import React, { memo } from 'react';
+
+const Router = memo(function Router() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Nav />
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/guide" component={Guide} />
-        <Route component={NotFound} />
-      </Switch>
+      <React.Suspense fallback={<div className="p-4">Loading...</div>}>
+        <Switch>
+          <Route path="/" component={Home} />
+          <Route path="/guide" component={Guide} />
+          <Route component={NotFound} />
+        </Switch>
+      </React.Suspense>
     </div>
   );
-}
+});
 
 function App() {
   return (
