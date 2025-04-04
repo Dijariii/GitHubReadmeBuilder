@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "node vercel-build.cjs",
-  "outputDirectory": "dist",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/public",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/assets/:path*", "destination": "/assets/:path*" },
