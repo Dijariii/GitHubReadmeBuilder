@@ -16,7 +16,7 @@ This document provides comprehensive instructions for deploying the GitHub READM
 3. Import your Git repository
 4. Configure the project:
    - **Framework Preset**: Leave as "Other" or select "Vite" if available
-   - **Build Command**: `node vercel-build.js`
+   - **Build Command**: `node vercel-build.cjs`
    - **Output Directory**: `dist`
    - **Install Command**: Leave default (`npm install` or `yarn install`)
 5. Click "Deploy" button
@@ -39,7 +39,7 @@ This document provides comprehensive instructions for deploying the GitHub READM
    ```
 
 4. Follow the interactive prompts:
-   - When asked about the build command, enter: `node vercel-build.js`
+   - When asked about the build command, enter: `node vercel-build.cjs`
    - When asked about the output directory, enter: `dist`
 
 ## Troubleshooting
@@ -98,3 +98,17 @@ Vercel automatically deploys your application whenever changes are pushed to you
 ---
 
 If you encounter persistent issues, please contact [dejxhar@gmail.com](mailto:dejxhar@gmail.com) for assistance.
+## Handling ESM vs CommonJS Issues
+
+If you encounter module format errors during deployment, such as:
+```
+ReferenceError: require is not defined in ES module scope
+```
+
+This indicates a conflict between ES modules and CommonJS. We provide two build scripts:
+
+1. `vercel-build.js` - ES Module version (uses `import/export`)
+2. `vercel-build.cjs` - CommonJS version (uses `require/module.exports`)
+
+By default, our deployment configuration in `vercel.json` uses the CommonJS version. If you need to use the ES Module version, ensure your `package.json` does not have `"type": "module"` or modify `vercel.json` to use `vercel-build.js` instead.
+

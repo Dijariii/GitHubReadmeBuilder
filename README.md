@@ -59,12 +59,12 @@ This application is ready for deployment on Vercel:
 4. Create a new project in Vercel and select your repository
 5. Update the settings:
    - Framework: Other
-   - Build Command: `node vercel-build.js`
+   - Build Command: `node vercel-build.cjs`
    - Output Directory: `dist`
 6. Click "Deploy" and wait for the build to complete
 7. Your README generator is now live!
 
-> **Note**: The project includes a custom `vercel.json` configuration file and a special `vercel-build.js` script that handles all the necessary build steps for proper deployment.
+> **Note**: The project includes a custom `vercel.json` configuration file and both CommonJS (`vercel-build.cjs`) and ES Module (`vercel-build.js`) build scripts to handle all the necessary build steps for proper deployment.
 
 ### Troubleshooting Deployment Issues
 
@@ -72,11 +72,12 @@ If you encounter issues with your Vercel deployment (like seeing source code ins
 
 1. Verify that the `vercel-build.js` file exists in your repository
 2. Make sure your `vercel.json` file has the correct configuration
-3. In the Vercel project settings, confirm that the build command is set to `node vercel-build.js`
+3. In the Vercel project settings, confirm that the build command is set to `node vercel-build.cjs` (CommonJS version)
 4. Check the build logs for any errors
 5. Try triggering a new deployment after updating the configuration
+6. If you encounter module format errors (ESM vs CommonJS), try switching from `vercel-build.cjs` to `vercel-build.js` or vice versa in your Vercel project settings
 
-For more detailed troubleshooting steps, please refer to `DEPLOY.txt` in the repository.
+For more detailed troubleshooting steps, please refer to `DEPLOY.md` in the repository.
 
 ## 🌟 Usage Guide
 

@@ -1,12 +1,7 @@
-// This is a simplified build script for Vercel
-import { execSync } from 'child_process';
-import fs from 'fs';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-
-// Get the current module's directory
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// This is a CommonJS version of the build script for Vercel
+const { execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
 
 // Build the client
 console.log('Building client...');
@@ -24,7 +19,6 @@ if (!fs.existsSync('dist/api')) {
 // Create a simple Vercel serverless function handler
 const vercelHandler = `
 // Serverless function for Vercel
-// Pure ESM module for Vercel
 export default function handler(req, res) {
   // Redirect to the client-side React app
   res.redirect('/');
