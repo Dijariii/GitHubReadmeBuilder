@@ -7,6 +7,7 @@
   
   ![License](https://img.shields.io/badge/license-MIT-blue)
   ![Version](https://img.shields.io/badge/version-1.0.0-green)
+  [![GitHub Repo](https://img.shields.io/badge/GitHub-Repo-blue?logo=github)](https://github.com/Dijariii/Readme-Gen)
 </div>
 
 ## 📖 About
@@ -25,6 +26,27 @@ Readme-Gen is a powerful tool designed to help developers create stunning GitHub
 - **Responsive Design**: Looks great on desktop and mobile devices
 - **One-Click Copy**: Copy the generated markdown with a single click
 - **Download Option**: Download your README.md file directly to your computer
+## 🛠️ Technology Stack
+
+- Frontend: React, TypeScript, TailwindCSS, Shadcn UI
+- Backend: Express.js, Node.js
+- State Management: React Query for efficient data fetching
+- Styling: Tailwind CSS with custom theming
+- Icons: Lucide React and React Icons
+
+## 🔧 Installation & Setup
+
+### Prerequisites
+- Node.js (v18 or later)
+- npm or yarn
+
+### Setup Steps
+
+1. Clone the repository
+2. Set up dependencies with npm
+3. Start the development server
+4. Open your browser to localhost:5000
+
 ## 🌟 Usage Guide
 
 1. **Profile Section**:
@@ -33,6 +55,7 @@ Readme-Gen is a powerful tool designed to help developers create stunning GitHub
 
 2. **Language Selection**:
    - Choose from multiple supported languages to translate your README
+   - The application supports over 10 popular languages
 
 3. **Skills & Technologies**:
    - Select from popular programming languages and frameworks
@@ -40,11 +63,11 @@ Readme-Gen is a powerful tool designed to help developers create stunning GitHub
 
 4. **GitHub Stats**:
    - Choose from various themes and layouts
-   - Customize which stats to display (contributions, stars, etc.)
+   - Customize which stats to display
 
 5. **Custom Sections**:
    - Add additional sections with custom titles and content
-   - Rearrange sections using drag-and-drop
+   - Format text with markdown support
 
 6. **Project Detection**:
    - Let the app auto-detect your project type
@@ -53,7 +76,6 @@ Readme-Gen is a powerful tool designed to help developers create stunning GitHub
 7. **Final Steps**:
    - Preview your README in real-time
    - Copy the markdown or download the README.md file
-   - Paste it into your GitHub profile repository
 
 ## ❓ Troubleshooting
 
@@ -61,7 +83,6 @@ Readme-Gen is a powerful tool designed to help developers create stunning GitHub
 
 1. **GitHub API Rate Limiting**
    - If you encounter API rate limiting, try using a GitHub token for authentication
-   - Set up your token in the app settings
 
 2. **Preview Not Updating**
    - Clear your browser cache
@@ -70,23 +91,26 @@ Readme-Gen is a powerful tool designed to help developers create stunning GitHub
 3. **Custom Sections Not Saving**
    - Make sure to click the "Add Section" button after entering section details
 
+## 📊 Project Status
+
+Readme-Gen is under active development. We welcome contributions from the community to make it even better!
+
+## 👥 Contributing
+
+We welcome contributions from the community! Please read our contributing guidelines before submitting a pull request.
+
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 👨‍💻 Author
+## 👏 Credits
 
-- **Dijari** - [GitHub](https://github.com/Dijariii)
+- **Developer**: Dijari
+- **Contact**: dejxhar@gmail.com
+- **Country**: 🇽🇰 Kosovo
 
-## 📞 Contact
+---
 
-For support or inquiries: [dejxhar@gmail.com](mailto:dejxhar@gmail.com)
-
-## 🙏 Acknowledgements
-
-- [React](https://reactjs.org/) - JavaScript library for building user interfaces
-- [TailwindCSS](https://tailwindcss.com/) - Utility-first CSS framework
-- [Shadcn UI](https://ui.shadcn.com/) - Beautiful UI components built with Radix and Tailwind
-- [GitHub API](https://docs.github.com/en/rest) - For fetching user profiles and stats
-- [React Icons](https://react-icons.github.io/react-icons/) - Icon library for React
-- [Lucide React](https://lucide.dev/) - Beautiful & consistent icon set
+<div align="center">
+  Made with ❤️ by <a href="mailto:dejxhar@gmail.com">Dijari in 🇽🇰</a> | <a href="https://github.com/Dijariii/Readme-Gen">GitHub Repository</a>
+</div>
