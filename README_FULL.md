@@ -17,14 +17,54 @@ Readme-Gen is a powerful tool designed to help developers create stunning GitHub
 
 - **Live Preview**: See your README changes in real-time as you type
 - **Customizable Sections**: Add projects, skills, languages, and social links
-- **GitHub Stats Integration**: Display your GitHub statistics with various themes and layouts
+- **GitHub Stats Integration**: Display your GitHub statistics with various themes
 - **Multilingual Support**: Translate your README into multiple languages with one click
-- **Project Type Detection**: Auto-detect project type and suggest appropriate technology stacks
+- **Project Type Detection**: Auto-detect project type and suggest technology stacks
 - **Custom Sections**: Add your own personalized sections with custom titles and content
 - **Interactive Elements**: Emoji-powered tooltips for enhanced UI/UX experience
 - **Responsive Design**: Looks great on desktop and mobile devices
 - **One-Click Copy**: Copy the generated markdown with a single click
 - **Download Option**: Download your README.md file directly to your computer
+
+## 🛠️ Technology Stack
+
+- **Frontend**: React, TypeScript, TailwindCSS, Shadcn UI
+- **Backend**: Express.js, Node.js
+- **State Management**: React Query for efficient data fetching and caching
+- **Styling**: Tailwind CSS with custom theming for a modern look and feel
+- **Icons**: Lucide React and React Icons for beautiful and consistent iconography
+- **Form Handling**: React Hook Form with Zod validation
+- **Markdown**: React Markdown for rendering the preview
+
+## 🔧 Installation & Setup
+
+### Prerequisites
+- Node.js (v18 or later)
+- npm or yarn
+
+### Setup Steps
+
+1. Clone the repository
+   ```bash
+   git clone https://github.com/Dijariii/Readme-Gen.git
+   cd Readme-Gen
+   ```
+
+2. Install dependencies
+   ```bash
+   npm install
+   ```
+
+3. Start the development server
+   ```bash
+   npm run dev
+   ```
+
+4. Open your browser
+   ```
+   http://localhost:5000
+   ```
+
 ## 🌟 Usage Guide
 
 1. **Profile Section**:
@@ -54,21 +94,6 @@ Readme-Gen is a powerful tool designed to help developers create stunning GitHub
    - Preview your README in real-time
    - Copy the markdown or download the README.md file
    - Paste it into your GitHub profile repository
-
-## ❓ Troubleshooting
-
-### Common Issues
-
-1. **GitHub API Rate Limiting**
-   - If you encounter API rate limiting, try using a GitHub token for authentication
-   - Set up your token in the app settings
-
-2. **Preview Not Updating**
-   - Clear your browser cache
-   - Ensure JavaScript is enabled in your browser
-
-3. **Custom Sections Not Saving**
-   - Make sure to click the "Add Section" button after entering section details
 
 ## 📄 License
 
