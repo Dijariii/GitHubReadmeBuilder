@@ -1,20 +1,29 @@
 import { ReadmeForm } from "@/components/editor/readme-form";
 import { Preview } from "@/components/editor/preview";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ReadmeFormData, PROGRAMMING_LANGUAGES, SOCIAL_PLATFORMS, PROJECT_TYPES } from "@shared/schema";
 import { Card } from "@/components/ui/card";
 import { TranslationService } from "@/utils/translation-service";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 export default function Home() {
   const [markdown, setMarkdown] = useState("");
   const [formData, setFormData] = useState<ReadmeFormData | undefined>(undefined);
+  const [livePreview, setLivePreview] = useState(true);
+  const [workingFormData, setWorkingFormData] = useState<ReadmeFormData | undefined>(undefined);
   const { toast } = useToast();
 
-  const handleFormSubmit = (data: ReadmeFormData) => {
-    // Save form data for analytics visualizer
-    setFormData(data);
-    
+  // Update preview in real-time when form data changes and live preview is enabled
+  useEffect(() => {
+    if (livePreview && workingFormData) {
+      updatePreview(workingFormData);
+    }
+  }, [livePreview, workingFormData]);
+
+  // Function to update the preview based on form data
+  const updatePreview = (data: ReadmeFormData) => {
     // Generate markdown in English first
     let md = generateMarkdown(data);
     
@@ -24,6 +33,20 @@ export default function Home() {
     }
     
     setMarkdown(md);
+  };
+
+  // Handle form changes for live preview
+  const handleFormChange = (data: ReadmeFormData) => {
+    setWorkingFormData(data);
+  };
+
+  const handleFormSubmit = (data: ReadmeFormData) => {
+    // Save form data for analytics visualizer
+    setFormData(data);
+    setWorkingFormData(data);
+    
+    // Update the preview (even if live preview is disabled)
+    updatePreview(data);
     
     toast({
       title: "README Generated!",
@@ -80,19 +103,33 @@ export default function Home() {
           </p>
         </div>
 
+        <div className="flex justify-end mb-4">
+          <div className="flex items-center gap-2">
+            <Label htmlFor="live-preview" className="cursor-pointer">Live Preview</Label>
+            <Switch 
+              id="live-preview" 
+              checked={livePreview}
+              onCheckedChange={setLivePreview}
+              className="data-[state=checked]:bg-[#2EA44F]"
+            />
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card className="p-6 bg-card">
             <ReadmeForm 
-              onSubmit={handleFormSubmit} 
+              onSubmit={handleFormSubmit}
+              onChange={handleFormChange}
             />
           </Card>
 
-          <Card className="p-6 bg-card">
+          <Card className="p-6 bg-card sticky top-4 max-h-[calc(100vh-2rem)] overflow-auto">
             <Preview 
               markdown={markdown} 
               onCopy={handleCopy} 
               onDownload={handleDownload}
-              formData={formData}
+              formData={formData || workingFormData}
+              isLivePreview={livePreview}
             />
           </Card>
         </div>

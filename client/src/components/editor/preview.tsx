@@ -10,6 +10,7 @@ interface PreviewProps {
   onCopy: () => void;
   onDownload?: () => void;
   formData?: ReadmeFormData;
+  isLivePreview?: boolean;
 }
 
 function SampleAnalytics({ formData }: { formData?: ReadmeFormData }) {
@@ -38,7 +39,7 @@ function SampleAnalytics({ formData }: { formData?: ReadmeFormData }) {
   );
 }
 
-export function Preview({ markdown, onCopy, onDownload, formData }: PreviewProps) {
+export function Preview({ markdown, onCopy, onDownload, formData, isLivePreview }: PreviewProps) {
   const [showRaw, setShowRaw] = useState(false);
 
   const handleDownload = () => {
@@ -62,7 +63,15 @@ export function Preview({ markdown, onCopy, onDownload, formData }: PreviewProps
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Preview</h2>
+        <div className="flex items-center gap-2">
+          <h2 className="text-lg font-semibold">Preview</h2>
+          {isLivePreview && (
+            <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+              <span className="mr-1 h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></span>
+              Live
+            </span>
+          )}
+        </div>
         <div className="flex gap-2">
           <Button 
             onClick={() => setShowRaw(!showRaw)}

@@ -23,7 +23,7 @@ import {
 import { Plus, Trash2 } from "lucide-react";
 import * as SiIcons from "react-icons/si";
 import type { IconType } from "react-icons";
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AnalyticsConfig } from "./analytics-config";
 import { LanguageSelector } from "./language-selector";
 import { GitHubIntegration } from "./github-integration";
@@ -34,6 +34,7 @@ import { EmojiTooltip } from "@/components/ui/emoji-tooltip";
 
 interface ReadmeFormProps {
   onSubmit: (data: ReadmeFormData) => void;
+  onChange?: (data: ReadmeFormData) => void;
 }
 
 const TROPHY_THEMES = ["flat", "onedark", "gruvbox", "dracula", "monokai"] as const;
@@ -51,7 +52,7 @@ const SOCIAL_ICONS: Record<string, IconType> = {
   CodePen: SiIcons.SiCodepen,
 };
 
-export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
+export function ReadmeForm({ onSubmit, onChange }: ReadmeFormProps) {
   const form = useForm<ReadmeFormData>({
     resolver: zodResolver(readmeFormSchema),
     defaultValues: {
@@ -73,6 +74,20 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
       }
     },
   });
+  
+  // Set up watch for form changes to enable live preview
+  React.useEffect(() => {
+    if (!onChange) return;
+    
+    const subscription = form.watch((value) => {
+      // Only trigger onChange when we have valid data
+      if (value.name && value.githubUsername && value.bio) {
+        onChange(form.getValues() as ReadmeFormData);
+      }
+    });
+    
+    return () => subscription.unsubscribe();
+  }, [form, onChange]);
 
   const skillsArray = useFieldArray({
     control: form.control,
