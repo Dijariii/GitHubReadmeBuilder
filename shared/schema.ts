@@ -1,22 +1,55 @@
-import { pgTable, text, serial, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, jsonb, timestamp, boolean, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { nanoid } from 'nanoid';
 
 export const templates = pgTable("templates", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   content: text("content").notNull(),
   sections: jsonb("sections").notNull().$type<string[]>(),
+  // New fields for template sharing
+  userId: text("user_id"),
+  isPublic: boolean("is_public").default(false),
+  tags: jsonb("tags").$type<string[]>().default([]),
+  likes: integer("likes").default(0),
+  shareableId: text("shareable_id").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const insertTemplateSchema = createInsertSchema(templates).pick({
   name: true,
   content: true,
   sections: true,
+  userId: true,
+  isPublic: true,
+  tags: true,
 });
 
 export type InsertTemplate = z.infer<typeof insertTemplateSchema>;
 export type Template = typeof templates.$inferSelect;
+
+// Template sharing schema
+export const templateShareSchema = z.object({
+  templateId: z.number(),
+  recipientEmail: z.string().email().optional(),
+  generateShareableLink: z.boolean().default(true),
+});
+
+export type TemplateShareRequest = z.infer<typeof templateShareSchema>;
+
+// Template search schema
+export const templateSearchSchema = z.object({
+  query: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  userId: z.string().optional(),
+  publicOnly: z.boolean().default(true),
+  page: z.number().min(1).default(1),
+  limit: z.number().min(1).max(50).default(10),
+});
+
+export type TemplateSearchParams = z.infer<typeof templateSearchSchema>;
 
 // Supported languages for multilingual support
 export const SUPPORTED_LANGUAGES = [

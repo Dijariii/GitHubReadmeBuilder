@@ -1,9 +1,15 @@
-import { templates, type Template, type InsertTemplate } from "@shared/schema";
+import { templates, type Template, type InsertTemplate, type TemplateSearchParams } from "@shared/schema";
+import { nanoid } from 'nanoid';
 
 export interface IStorage {
   getTemplates(): Promise<Template[]>;
   getTemplate(id: number): Promise<Template | undefined>;
+  getTemplateByShareableId(shareableId: string): Promise<Template | undefined>;
   createTemplate(template: InsertTemplate): Promise<Template>;
+  updateTemplate(id: number, template: Partial<InsertTemplate>): Promise<Template | undefined>;
+  deleteTemplate(id: number): Promise<boolean>;
+  searchTemplates(params: TemplateSearchParams): Promise<{ templates: Template[], total: number }>;
+  likeTemplate(id: number): Promise<Template | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -62,7 +68,10 @@ export class MemStorage implements IStorage {
 Made with ❤️ by Dijari in 🇽🇰<br>
 For support: dejxhar@gmail.com
 </div>`,
-        sections: ["About Me", "Languages and Tools", "Skills", "Social Links", "Projects", "GitHub Stats"]
+        sections: ["About Me", "Languages and Tools", "Skills", "Social Links", "Projects", "GitHub Stats"],
+        userId: null,
+        isPublic: true,
+        tags: ["professional", "developer"]
       },
       {
         name: "Minimalist",
@@ -92,7 +101,10 @@ For support: dejxhar@gmail.com
 Made with ❤️ by Dijari in 🇽🇰<br>
 For support: dejxhar@gmail.com
 </div>`,
-        sections: ["Tech Stack", "Links", "Projects", "GitHub Stats"]
+        sections: ["Tech Stack", "Links", "Projects", "GitHub Stats"],
+        userId: null,
+        isPublic: true,
+        tags: ["minimal", "clean"]
       }
     ];
 
@@ -109,6 +121,15 @@ For support: dejxhar@gmail.com
     return this.templates.get(id);
   }
 
+  async getTemplateByShareableId(shareableId: string): Promise<Template | undefined> {
+    for (const template of this.templates.values()) {
+      if (template.shareableId === shareableId) {
+        return template;
+      }
+    }
+    return undefined;
+  }
+
   async createTemplate(template: InsertTemplate): Promise<Template> {
     const id = this.currentId++;
     const newTemplate: Template = {
@@ -116,9 +137,86 @@ For support: dejxhar@gmail.com
       name: template.name,
       content: template.content,
       sections: template.sections,
+      userId: template.userId || null,
+      isPublic: template.isPublic || false,
+      tags: template.tags || [],
+      likes: 0,
+      shareableId: nanoid(10),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
     this.templates.set(id, newTemplate);
     return newTemplate;
+  }
+
+  async updateTemplate(id: number, updates: Partial<InsertTemplate>): Promise<Template | undefined> {
+    const template = this.templates.get(id);
+    if (!template) return undefined;
+
+    const updatedTemplate: Template = {
+      ...template,
+      ...updates,
+      updatedAt: new Date()
+    };
+    
+    this.templates.set(id, updatedTemplate);
+    return updatedTemplate;
+  }
+
+  async deleteTemplate(id: number): Promise<boolean> {
+    return this.templates.delete(id);
+  }
+
+  async searchTemplates(params: TemplateSearchParams): Promise<{ templates: Template[], total: number }> {
+    let filteredTemplates = Array.from(this.templates.values());
+    
+    // Filter by public templates
+    if (params.publicOnly) {
+      filteredTemplates = filteredTemplates.filter(t => t.isPublic);
+    }
+    
+    // Filter by user ID
+    if (params.userId) {
+      filteredTemplates = filteredTemplates.filter(t => t.userId === params.userId);
+    }
+    
+    // Filter by search query
+    if (params.query) {
+      const query = params.query.toLowerCase();
+      filteredTemplates = filteredTemplates.filter(t => 
+        t.name.toLowerCase().includes(query) || 
+        t.content.toLowerCase().includes(query)
+      );
+    }
+    
+    // Filter by tags
+    if (params.tags && params.tags.length > 0) {
+      filteredTemplates = filteredTemplates.filter(t => 
+        params.tags.some(tag => t.tags.includes(tag))
+      );
+    }
+    
+    const total = filteredTemplates.length;
+    
+    // Apply pagination
+    const start = (params.page - 1) * params.limit;
+    const end = start + params.limit;
+    filteredTemplates = filteredTemplates.slice(start, end);
+    
+    return { templates: filteredTemplates, total };
+  }
+
+  async likeTemplate(id: number): Promise<Template | undefined> {
+    const template = this.templates.get(id);
+    if (!template) return undefined;
+    
+    const updatedTemplate: Template = {
+      ...template,
+      likes: template.likes + 1
+    };
+    
+    this.templates.set(id, updatedTemplate);
+    return updatedTemplate;
   }
 }
 

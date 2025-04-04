@@ -2,14 +2,27 @@ import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import { Copy, Download, Code, Eye } from 'lucide-react';
 import { useState } from 'react';
+import { AnalyticsVisualizer } from './analytics-visualizer';
+import { ReadmeFormData } from '@shared/schema';
 
 interface PreviewProps {
   markdown: string;
   onCopy: () => void;
   onDownload?: () => void;
+  formData?: ReadmeFormData;
 }
 
-function SampleAnalytics() {
+function SampleAnalytics({ formData }: { formData?: ReadmeFormData }) {
+  if (formData?.githubUsername && formData.analytics) {
+    return (
+      <AnalyticsVisualizer 
+        githubUsername={formData.githubUsername}
+        analyticsConfig={formData.analytics}
+        showApiKeyWarning={!formData.githubApiToken && formData.analytics.includePrivateRepos}
+      />
+    );
+  }
+  
   return (
     <div className="space-y-4 p-4 border rounded-md bg-gray-50 dark:bg-gray-900/20 shadow-inner">
       <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Sample Analytics Preview</div>
@@ -25,7 +38,7 @@ function SampleAnalytics() {
   );
 }
 
-export function Preview({ markdown, onCopy, onDownload }: PreviewProps) {
+export function Preview({ markdown, onCopy, onDownload, formData }: PreviewProps) {
   const [showRaw, setShowRaw] = useState(false);
 
   const handleDownload = () => {
@@ -87,7 +100,7 @@ export function Preview({ markdown, onCopy, onDownload }: PreviewProps) {
           {markdown ? (
             <>
               <ReactMarkdown>{markdown}</ReactMarkdown>
-              {!markdown.includes('github-readme-activity-graph') && <SampleAnalytics />}
+              {!markdown.includes('github-readme-activity-graph') && <SampleAnalytics formData={formData} />}
             </>
           ) : (
             <div className="text-muted-foreground text-center py-8">

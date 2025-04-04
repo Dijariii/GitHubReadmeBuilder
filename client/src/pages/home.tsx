@@ -8,9 +8,13 @@ import { TranslationService } from "@/utils/translation-service";
 
 export default function Home() {
   const [markdown, setMarkdown] = useState("");
+  const [formData, setFormData] = useState<ReadmeFormData | undefined>(undefined);
   const { toast } = useToast();
 
   const handleFormSubmit = (data: ReadmeFormData) => {
+    // Save form data for analytics visualizer
+    setFormData(data);
+    
     // Generate markdown in English first
     let md = generateMarkdown(data);
     
@@ -88,6 +92,7 @@ export default function Home() {
               markdown={markdown} 
               onCopy={handleCopy} 
               onDownload={handleDownload}
+              formData={formData}
             />
           </Card>
         </div>
