@@ -51,7 +51,7 @@ export default function Home() {
         </div>
 
         <footer className="mt-8 text-center text-muted-foreground">
-          <p>Made with ❤️ by Dijari in 🇽🇰</p>
+          <p>Made with ❤️ by <a href="https://github.com/Dijariii/Readme-Gen" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Readme-Gen</a> by Dijari in 🇽🇰</p>
           <p>For support: <a href="mailto:dejxhar@gmail.com" className="text-primary hover:underline">dejxhar@gmail.com</a></p>
         </footer>
       </div>
@@ -138,7 +138,7 @@ ${projectsList}
 
 ---
 <div align="center">
-Made with ❤️ by Dijari in 🇽🇰<br>
-For support: dejxhar@gmail.com
+Made with ❤️ by <a href="https://github.com/Dijariii/Readme-Gen">Readme-Gen</a> by Dijari in 🇽🇰<br>
+For support: <a href="mailto:dejxhar@gmail.com">dejxhar@gmail.com</a>
 </div>`;
 }
