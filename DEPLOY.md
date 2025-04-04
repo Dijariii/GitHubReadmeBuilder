@@ -26,7 +26,7 @@ The project includes a `vercel.json` configuration file that has been pre-config
 When configuring the project in Vercel:
 
 - **Framework Preset**: Select "Other"
-- **Build Command**: Use the default: `npm run build`
+- **Build Command**: Set this to: `npx tsx vercel-build.ts`
 - **Output Directory**: Use the default: `dist`
 - **Install Command**: Use the default: `npm install`
 

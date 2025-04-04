@@ -1,66 +1,51 @@
-import express, { type Request, Response, NextFunction } from "express";
-import compression from "compression";
-import { storage } from "../server/storage";
+import express, { Request, Response, NextFunction } from 'express';
+import path from 'path';
+import compression from 'compression';
+import { storage } from '../server/storage';
+import { registerRoutes } from '../server/routes';
 
+// Create Express application
 const app = express();
-app.use(express.json({ limit: '1mb' }));
-app.use(express.urlencoded({ extended: false, limit: '1mb' }));
-app.set('etag', 'strong');
+
+// Middleware
 app.use(compression());
+app.use(express.json());
 
-// Middleware to log API requests
-app.use((req, res, next) => {
-  const start = Date.now();
-  const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
+// Set up routes
+registerRoutes(app);
 
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
-
-  res.on("finish", () => {
-    const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
-
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
-
-      console.log(logLine);
-    }
+// Serve static files in production
+if (process.env.NODE_ENV === 'production') {
+  const distPath = path.resolve(process.cwd(), 'dist');
+  
+  app.use(express.static(distPath, {
+    maxAge: '1d',
+    immutable: true,
+    index: false
+  }));
+  
+  // Catch-all route for client-side routing
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
   });
+}
 
-  next();
-});
-
-// API Routes
-app.get("/api/templates", async (_req, res) => {
-  const templates = await storage.getTemplates();
-  res.json(templates);
-});
-
-app.get("/api/templates/:id", async (req, res) => {
-  const template = await storage.getTemplate(Number(req.params.id));
-  if (!template) {
-    res.status(404).json({ message: "Template not found" });
-    return;
-  }
-  res.json(template);
-});
-
-// Error handler
+// Error handling
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-  const status = err.status || err.statusCode || 500;
-  const message = err.message || "Internal Server Error";
-
-  res.status(status).json({ message });
   console.error(err);
+  res.status(err.status || 500).json({
+    message: err.message || 'Something went wrong',
+  });
 });
+
+// Port configuration with fallback for Vercel
+const port = process.env.PORT || 5000;
+
+// Only start the server if not running in Vercel
+if (process.env.VERCEL !== '1') {
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}
 
 export default app;

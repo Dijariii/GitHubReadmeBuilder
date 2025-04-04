@@ -54,15 +54,19 @@ Readme-Gen is a powerful tool designed to help developers create stunning GitHub
 This application is ready for deployment on Vercel:
 
 1. Fork or clone this repository to your GitHub account
-2. Sign up for a Vercel (https://vercel.com) account if you don't have one
+2. Sign up for a [Vercel](https://vercel.com) account if you don't have one
 3. Connect your GitHub account to Vercel
 4. Create a new project in Vercel and select your repository
-5. Keep the default settings:
+5. Update the settings:
    - Framework: Other
-   - Build Command: npm run build
+   - Build Command: npx tsx vercel-build.ts
    - Output Directory: dist
 6. Click "Deploy" and wait for the build to complete
 7. Your README generator is now live!
+
+> **Note**: The project includes a custom `vercel.json` configuration file and a special `vercel-build.ts` script that handles all the necessary build steps for proper deployment.
+
+> **Note**: The project includes a custom `vercel.json` configuration file and a special `vercel-build.ts` script that handles all the necessary build steps for proper deployment.
 
 ## 🚀 Deployment
 
@@ -74,12 +78,14 @@ This application is ready for deployment on Vercel:
 2. Sign up for a [Vercel](https://vercel.com) account if you don't have one
 3. Connect your GitHub account to Vercel
 4. Create a new project in Vercel and select your repository
-5. Keep the default settings:
+5. Update the settings:
    - Framework: Other
-   - Build Command: npm run build
+   - Build Command: npx tsx vercel-build.ts
    - Output Directory: dist
 6. Click "Deploy" and wait for the build to complete
 7. Your README generator is now live!
+
+> **Note**: The project includes a custom `vercel.json` configuration file and a special `vercel-build.ts` script that handles all the necessary build steps for proper deployment.
 
 ## 🌟 Usage Guide
 

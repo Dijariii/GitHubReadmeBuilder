@@ -8,7 +8,7 @@ execSync('vite build', { stdio: 'inherit' });
 
 // Build the server API
 console.log('Building server API...');
-execSync('esbuild api/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist/api', { stdio: 'inherit' });
+execSync('esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist/api', { stdio: 'inherit' });
 
 // Copy necessary files for Vercel deployment
 console.log('Preparing for Vercel deployment...');
@@ -20,13 +20,20 @@ if (!fs.existsSync('dist/api')) {
 
 // Create Vercel serverless function handler
 const vercelHandler = `
-import app from './index.js';
 import { createServer } from 'http';
+import app from './index.js';
 
+// Create HTTP server
 const server = createServer(app);
-export default server;
+
+// Export for Vercel
+export default app;
 `;
 
+// Write handler to file
 fs.writeFileSync('dist/api/index.js', vercelHandler, 'utf-8');
+
+// Create a _redirects file for Netlify (in case it's used)
+fs.writeFileSync('dist/_redirects', '/* /index.html 200', 'utf-8');
 
 console.log('Build complete!');
