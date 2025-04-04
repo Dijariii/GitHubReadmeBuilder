@@ -11,6 +11,29 @@ execSync('npx vite build', { stdio: 'inherit' });
 console.log('Building server API...');
 execSync('npx esbuild server/index.ts server/routes.ts server/storage.ts shared/schema.ts --platform=node --packages=external --bundle --format=esm --outdir=dist/server', { stdio: 'inherit' });
 
+// Make sure all required directories exist
+if (!fs.existsSync('dist/assets')) {
+  fs.mkdirSync('dist/assets', { recursive: true });
+}
+
+// Verify Vite built assets are available and copy if needed
+if (fs.existsSync('dist/assets/index.js')) {
+  console.log('Assets already exist in dist/assets');
+} else {
+  console.log('Copying assets to dist/assets...');
+  
+  // Try to copy from client/dist if available
+  if (fs.existsSync('client/dist/assets')) {
+    execSync('cp -r client/dist/assets/* dist/assets/', { stdio: 'inherit' });
+    console.log('Copied assets from client/dist/assets');
+  } else if (fs.existsSync('client/assets')) {
+    execSync('cp -r client/assets/* dist/assets/', { stdio: 'inherit' });
+    console.log('Copied assets from client/assets');
+  } else {
+    console.warn('Warning: Could not find assets to copy');
+  }
+}
+
 // Ensure the api directory exists
 if (!fs.existsSync('dist/api')) {
   fs.mkdirSync('dist/api', { recursive: true });
@@ -57,15 +80,15 @@ if (!fs.existsSync('dist/index.html')) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GitHub README Generator</title>
-    <link rel="stylesheet" href="./assets/index.css" />
-    <!-- Add base href for proper asset loading -->
+    <!-- Important: Base tag must come before any relative URLs -->
     <base href="/" />
+    <link rel="stylesheet" href="/assets/index.css" />
     <!-- Add fallback meta tags -->
     <meta name="description" content="GitHub README Generator - Create beautiful GitHub profile READMEs with ease" />
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="./assets/index.js"></script>
+    <script type="module" src="/assets/index.js"></script>
   </body>
 </html>`;
       fs.writeFileSync('dist/index.html', fallbackHtml, 'utf-8');

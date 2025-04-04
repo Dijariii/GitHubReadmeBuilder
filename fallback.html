@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitHub README Generator</title>
+    <!-- Important: Base tag must come before any relative URLs -->
+    <base href="/" />
+    <meta name="description" content="GitHub README Generator - Create beautiful GitHub profile READMEs with ease" />
+    
+    <!-- Directly reference bundled CSS with absolute path -->
+    <link rel="stylesheet" href="/assets/index.css" />
+    
+    <!-- Fallback styles in case external CSS fails to load -->
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: #f6f8fa;
+        margin: 0;
+        padding: 0;
+      }
+      #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .fallback-message {
+        text-align: center;
+        max-width: 600px;
+        margin: 2rem;
+        padding: 2rem;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      }
+      h1 {
+        color: #24292e;
+      }
+      a {
+        color: #0366d6;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <!-- Fallback content that will only show if JS fails to load -->
+      <div class="fallback-message" id="loading-message">
+        <h1>GitHub README Generator</h1>
+        <p>Loading application...</p>
+        <p>If this message persists, please check your browser console for errors.</p>
+        
+        <div id="troubleshooting" style="margin-top: 2rem; text-align: left;">
+          <h3>Troubleshooting:</h3>
+          <ul>
+            <li>Ensure JavaScript is enabled in your browser</li>
+            <li>Try clearing your browser cache</li>
+            <li>Check if the assets are loading (inspect network tab)</li>
+            <li>Try accessing <a href="/assets/index.js">/assets/index.js</a> directly</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Primary script bundle -->
+    <script type="module" src="/assets/index.js"></script>
+    
+    <!-- Fallback script to hide loading message when app loads -->
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        // Check if React has rendered anything
+        setTimeout(() => {
+          const loadingMessage = document.getElementById('loading-message');
+          if (loadingMessage && loadingMessage.parentNode.childNodes.length > 1) {
+            loadingMessage.style.display = 'none';
+          }
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>

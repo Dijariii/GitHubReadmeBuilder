@@ -56,11 +56,19 @@ If you encounter any issues with your deployment, check the following:
    - The updated configuration includes separate handling for static assets and API routes
    - Verify that cache headers are correctly set for optimal performance
 
-3. **Blank Page/404 Errors**:
+3. **Blank Page/White Screen Issues**:
    - Check that the output directory structure matches what's expected in `dist`
    - Verify that all assets are properly referenced with correct paths
    - Ensure the base href is set correctly in index.html
    - Check for any 404 errors in the browser console for missing assets
+   - Try clearing browser cache or using incognito mode to avoid cached resources
+   - Verify JavaScript is enabled in your browser
+   - If you see a completely white page:
+     1. Inspect the page source to ensure it's not empty
+     2. Check network tab for failed resource loads
+     3. Try directly accessing `/assets/index.js` to validate asset deployment
+     4. If needed, add a manual `fallback.html` file to your repository with absolute paths
+     5. Validate the HTML generated in the `dist` folder has the correct asset paths
 
 4. **API Errors**:
    - Ensure the API endpoints are correctly formatted
