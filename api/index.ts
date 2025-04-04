@@ -1,7 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
 import compression from "compression";
-import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+import { storage } from "../server/storage";
 
 const app = express();
 app.use(express.json({ limit: '1mb' }));
@@ -9,6 +8,7 @@ app.use(express.urlencoded({ extended: false, limit: '1mb' }));
 app.set('etag', 'strong');
 app.use(compression());
 
+// Middleware to log API requests
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -32,40 +32,35 @@ app.use((req, res, next) => {
         logLine = logLine.slice(0, 79) + "…";
       }
 
-      log(logLine);
+      console.log(logLine);
     }
   });
 
   next();
 });
 
-(async () => {
-  const server = await registerRoutes(app);
+// API Routes
+app.get("/api/templates", async (_req, res) => {
+  const templates = await storage.getTemplates();
+  res.json(templates);
+});
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-
-    res.status(status).json({ message });
-    throw err;
-  });
-
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
+app.get("/api/templates/:id", async (req, res) => {
+  const template = await storage.getTemplate(Number(req.params.id));
+  if (!template) {
+    res.status(404).json({ message: "Template not found" });
+    return;
   }
+  res.json(template);
+});
 
-  // Use either the provided PORT environment variable (for Vercel) or default to 5000
-  const port = process.env.PORT || 5000;
-  server.listen({
-    port: Number(port),
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
-  });
-})();
+// Error handler
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  const status = err.status || err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+
+  res.status(status).json({ message });
+  console.error(err);
+});
+
+export default app;

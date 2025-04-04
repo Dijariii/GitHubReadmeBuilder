@@ -47,6 +47,40 @@ Readme-Gen is a powerful tool designed to help developers create stunning GitHub
 3. Start the development server
 4. Open your browser to localhost:5000
 
+## 🚀 Deployment
+
+### Deploying to Vercel
+
+This application is ready for deployment on Vercel:
+
+1. Fork or clone this repository to your GitHub account
+2. Sign up for a Vercel (https://vercel.com) account if you don't have one
+3. Connect your GitHub account to Vercel
+4. Create a new project in Vercel and select your repository
+5. Keep the default settings:
+   - Framework: Other
+   - Build Command: npm run build
+   - Output Directory: dist
+6. Click "Deploy" and wait for the build to complete
+7. Your README generator is now live!
+
+## 🚀 Deployment
+
+### Deploying to Vercel
+
+This application is ready for deployment on Vercel:
+
+1. Fork or clone this repository to your GitHub account
+2. Sign up for a [Vercel](https://vercel.com) account if you don't have one
+3. Connect your GitHub account to Vercel
+4. Create a new project in Vercel and select your repository
+5. Keep the default settings:
+   - Framework: Other
+   - Build Command: npm run build
+   - Output Directory: dist
+6. Click "Deploy" and wait for the build to complete
+7. Your README generator is now live!
+
 ## 🌟 Usage Guide
 
 1. **Profile Section**:

@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { SiGithub } from "react-icons/si";
+import { SiGithub, SiVercel } from "react-icons/si";
 
 export default function Guide() {
   return (
@@ -43,6 +43,27 @@ export default function Guide() {
                 <li>Add ways to connect with you</li>
                 <li>Use emojis and formatting to make it visually appealing</li>
               </ul>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-2xl font-semibold mb-4">Deploying Your Own Instance</h2>
+              <p className="text-muted-foreground mb-4">
+                Want to deploy your own version of this README generator? Follow these steps to deploy to Vercel:
+              </p>
+              <ol className="list-decimal list-inside space-y-3 text-muted-foreground mb-4">
+                <li>Fork the repository or clone it to your GitHub account</li>
+                <li>Sign up for a <a href="https://vercel.com" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">Vercel</a> account if you don't have one</li>
+                <li>Connect your GitHub account to Vercel</li>
+                <li>Create a new project in Vercel and select your repository</li>
+                <li>Keep the default settings (Framework: Other, Build Command: npm run build, Output Directory: dist)</li>
+                <li>Click "Deploy" and wait for the build to complete</li>
+              </ol>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <SiVercel className="h-4 w-4" />
+                The application is ready for deployment on Vercel without any additional configuration
+              </div>
             </CardContent>
           </Card>
 
