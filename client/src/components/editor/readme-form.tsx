@@ -25,6 +25,11 @@ import * as SiIcons from "react-icons/si";
 import type { IconType } from "react-icons";
 import React from 'react';
 import { AnalyticsConfig } from "./analytics-config";
+import { LanguageSelector } from "./language-selector";
+import { GitHubIntegration } from "./github-integration";
+import { ProjectDetector } from "./project-detector";
+import { CustomSections } from "./custom-sections";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface ReadmeFormProps {
   onSubmit: (data: ReadmeFormData) => void;
@@ -70,7 +75,7 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
 
   const skillsArray = useFieldArray({
     control: form.control,
-    name: "skills",
+    name: "skills" as any, // Type assertion to handle array of strings
   });
 
   const languagesArray = useFieldArray({
@@ -251,7 +256,7 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => skillsArray.append("")}
+            onClick={() => skillsArray.append("" as any)}
           >
             <Plus className="h-4 w-4 mr-2" />
             Add Skill
@@ -490,6 +495,36 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
             <Plus className="h-4 w-4 mr-2" />
             Add Project
           </Button>
+        </div>
+
+        {/* Advanced Features in Tabs */}
+        <div className="border rounded-md p-4 space-y-4">
+          <h3 className="font-medium mb-2">Advanced Features</h3>
+          
+          <Tabs defaultValue="language" className="w-full">
+            <TabsList className="grid grid-cols-4 mb-4">
+              <TabsTrigger value="language">Language</TabsTrigger>
+              <TabsTrigger value="github">GitHub API</TabsTrigger>
+              <TabsTrigger value="project">Project Type</TabsTrigger>
+              <TabsTrigger value="custom">Custom Sections</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="language" className="space-y-4">
+              <LanguageSelector form={form} />
+            </TabsContent>
+            
+            <TabsContent value="github" className="space-y-4">
+              <GitHubIntegration form={form} />
+            </TabsContent>
+            
+            <TabsContent value="project" className="space-y-4">
+              <ProjectDetector form={form} />
+            </TabsContent>
+            
+            <TabsContent value="custom" className="space-y-4">
+              <CustomSections form={form} />
+            </TabsContent>
+          </Tabs>
         </div>
 
         <Button type="submit" className="w-full bg-[#2EA44F] hover:bg-[#2C974B]">

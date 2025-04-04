@@ -2,16 +2,29 @@ import { ReadmeForm } from "@/components/editor/readme-form";
 import { Preview } from "@/components/editor/preview";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { ReadmeFormData, PROGRAMMING_LANGUAGES, SOCIAL_PLATFORMS } from "@shared/schema";
+import { ReadmeFormData, PROGRAMMING_LANGUAGES, SOCIAL_PLATFORMS, PROJECT_TYPES } from "@shared/schema";
 import { Card } from "@/components/ui/card";
+import { TranslationService } from "@/utils/translation-service";
 
 export default function Home() {
   const [markdown, setMarkdown] = useState("");
   const { toast } = useToast();
 
   const handleFormSubmit = (data: ReadmeFormData) => {
-    const md = generateMarkdown(data);
+    // Generate markdown in English first
+    let md = generateMarkdown(data);
+    
+    // Apply translations if a non-English language is selected
+    if (data.language !== "en") {
+      md = TranslationService.translateReadme(md, data.language);
+    }
+    
     setMarkdown(md);
+    
+    toast({
+      title: "README Generated!",
+      description: "Your custom README has been created successfully",
+    });
   };
 
   const handleCopy = async () => {
@@ -30,6 +43,29 @@ export default function Home() {
     }
   };
 
+  const handleDownload = () => {
+    try {
+      const blob = new Blob([markdown], { type: "text/markdown" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "README.md";
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Downloaded!",
+        description: "README.md file downloaded successfully",
+      });
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: "Failed to download README file",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <main className="container mx-auto p-4 py-8">
       <div className="max-w-screen-xl mx-auto">
@@ -42,11 +78,17 @@ export default function Home() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card className="p-6 bg-card">
-            <ReadmeForm onSubmit={handleFormSubmit} />
+            <ReadmeForm 
+              onSubmit={handleFormSubmit} 
+            />
           </Card>
 
           <Card className="p-6 bg-card">
-            <Preview markdown={markdown} onCopy={handleCopy} />
+            <Preview 
+              markdown={markdown} 
+              onCopy={handleCopy} 
+              onDownload={handleDownload}
+            />
           </Card>
         </div>
 
@@ -83,6 +125,11 @@ function generateMarkdown(data: ReadmeFormData): string {
     .map(project => `### ${project.name}\n${project.description}\n[View Project](${project.url})`)
     .join('\n\n');
 
+  // Custom sections
+  const customSectionsList = data.customSections
+    .map(section => `## ${section.title}\n${section.content}`)
+    .join('\n\n');
+
   const statsSection = data.showGitHubStats ? `
 <div align="center">
   ${data.showTrophies ? `
@@ -100,7 +147,9 @@ function generateMarkdown(data: ReadmeFormData): string {
   ` : ''}
 </div>` : '';
 
-  const analyticsSection = `
+  const analyticsSection = data.analytics.showContributionGraph || 
+                          data.analytics.showActivityGraph || 
+                          data.analytics.showCommitStats ? `
 <div align="center">
   ${data.analytics.showContributionGraph ? `
   <img src="https://github-readme-activity-graph.vercel.app/graph?username=${data.githubUsername}&theme=${data.analytics.graphStyle}" alt="Contribution Graph" />
@@ -113,7 +162,13 @@ function generateMarkdown(data: ReadmeFormData): string {
   ${data.analytics.showCommitStats ? `
   <img src="https://github-readme-stats.vercel.app/api/wakatime?username=${data.githubUsername}&layout=compact&theme=dark" alt="Coding Stats" />
   ` : ''}
-</div>`;
+</div>` : '';
+
+  // Add detected project type info if available
+  const projectTypeSection = data.detectedProjectType ? `
+## Project Type
+This README is for a ${PROJECT_TYPES.find(p => p.id === data.detectedProjectType)?.name || data.detectedProjectType} project.
+` : '';
 
   return `# Hi there! I'm ${data.name} 👋
 
@@ -123,6 +178,8 @@ ${analyticsSection}
 
 ## About Me
 ${data.bio}
+
+${projectTypeSection}
 
 ## 💻 Languages and Tools
 ${languagesList}
@@ -135,6 +192,8 @@ ${socialList}
 
 ## 📂 Projects
 ${projectsList}
+
+${customSectionsList}
 
 ---
 <div align="center">

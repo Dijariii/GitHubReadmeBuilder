@@ -18,6 +18,20 @@ export const insertTemplateSchema = createInsertSchema(templates).pick({
 export type InsertTemplate = z.infer<typeof insertTemplateSchema>;
 export type Template = typeof templates.$inferSelect;
 
+// Supported languages for multilingual support
+export const SUPPORTED_LANGUAGES = [
+  { code: "en", name: "English" },
+  { code: "es", name: "Spanish" },
+  { code: "fr", name: "French" },
+  { code: "de", name: "German" },
+  { code: "zh", name: "Chinese" },
+  { code: "ja", name: "Japanese" },
+  { code: "ko", name: "Korean" },
+  { code: "ru", name: "Russian" },
+  { code: "pt", name: "Portuguese" },
+  { code: "ar", name: "Arabic" },
+] as const;
+
 // Predefined list of programming languages
 export const PROGRAMMING_LANGUAGES = [
   { name: "TypeScript", logo: "https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg" },
@@ -50,6 +64,18 @@ export const SOCIAL_PLATFORMS = [
   { name: "CodePen", url: "https://codepen.io/" },
 ] as const;
 
+// Project types for auto-detection
+export const PROJECT_TYPES = [
+  { id: "nodejs", name: "Node.js", packageFile: "package.json" },
+  { id: "python", name: "Python", packageFile: "requirements.txt" },
+  { id: "rust", name: "Rust", packageFile: "Cargo.toml" },
+  { id: "java", name: "Java", packageFile: "pom.xml" },
+  { id: "dotnet", name: "C#/.NET", packageFile: ".csproj" },
+  { id: "go", name: "Go", packageFile: "go.mod" },
+  { id: "ruby", name: "Ruby", packageFile: "Gemfile" },
+  { id: "php", name: "PHP", packageFile: "composer.json" },
+] as const;
+
 export const readmeFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
   githubUsername: z.string().min(1, "GitHub username is required"),
@@ -69,6 +95,13 @@ export const readmeFormSchema = z.object({
     url: z.string().url("Must be a valid URL"),
     technologies: z.array(z.string())
   })),
+  customSections: z.array(z.object({
+    title: z.string().min(1, "Section title is required"),
+    content: z.string().min(1, "Section content is required")
+  })).default([]),
+  selectedTemplate: z.string().optional(),
+  language: z.enum([...SUPPORTED_LANGUAGES.map(lang => lang.code)] as [string, ...string[]]).default("en"),
+  detectedProjectType: z.string().optional(),
   showGitHubStats: z.boolean().default(true),
   showTrophies: z.boolean().default(true),
   showLanguageStats: z.boolean().default(true),
@@ -86,6 +119,7 @@ export const readmeFormSchema = z.object({
     graphStyle: z.enum(["normal", "dracula", "github", "tokyo-night"]).default("github"),
     includePrivateRepos: z.boolean().default(false),
   }).default({}),
+  githubApiToken: z.string().optional(),
 });
 
 export type ReadmeFormData = z.infer<typeof readmeFormSchema>;
@@ -102,4 +136,52 @@ export const TIME_RANGES = [
   { value: "last_7_days", label: "Last 7 Days" },
   { value: "last_30_days", label: "Last 30 Days" },
   { value: "last_year", label: "Last Year" },
+] as const;
+
+// Template profiles
+export const PROFILE_TEMPLATES = [
+  {
+    id: "minimal",
+    name: "Minimal",
+    description: "A clean and simple profile with essential information",
+    showStats: false,
+    showGitHubStats: false,
+    showTrophies: false,
+    showLanguageStats: false,
+    showStreak: false,
+    showAnalytics: false,
+  },
+  {
+    id: "developer",
+    name: "Developer",
+    description: "A coding-focused profile highlighting technical skills and repositories",
+    showStats: true,
+    showGitHubStats: true,
+    showTrophies: true,
+    showLanguageStats: true,
+    showStreak: true,
+    showAnalytics: true,
+  },
+  {
+    id: "visual",
+    name: "Visual",
+    description: "A graphic-rich profile with stats and visuals to showcase your work",
+    showStats: true,
+    showGitHubStats: true,
+    showTrophies: true,
+    showLanguageStats: true,
+    showStreak: true,
+    showAnalytics: true,
+  },
+  {
+    id: "professional",
+    name: "Professional",
+    description: "A business-oriented profile highlighting experience and achievements",
+    showStats: true,
+    showGitHubStats: true,
+    showTrophies: false,
+    showLanguageStats: true,
+    showStreak: false,
+    showAnalytics: false,
+  },
 ] as const;

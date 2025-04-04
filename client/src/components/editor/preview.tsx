@@ -6,6 +6,7 @@ import { useState } from 'react';
 interface PreviewProps {
   markdown: string;
   onCopy: () => void;
+  onDownload?: () => void;
 }
 
 function SampleAnalytics() {
@@ -24,10 +25,16 @@ function SampleAnalytics() {
   );
 }
 
-export function Preview({ markdown, onCopy }: PreviewProps) {
+export function Preview({ markdown, onCopy, onDownload }: PreviewProps) {
   const [showRaw, setShowRaw] = useState(false);
 
   const handleDownload = () => {
+    if (onDownload) {
+      onDownload();
+      return;
+    }
+    
+    // Default download handler if no external handler provided
     const blob = new Blob([markdown], { type: 'text/markdown' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
