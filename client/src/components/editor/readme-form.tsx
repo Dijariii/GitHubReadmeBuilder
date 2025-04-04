@@ -30,6 +30,7 @@ import { GitHubIntegration } from "./github-integration";
 import { ProjectDetector } from "./project-detector";
 import { CustomSections } from "./custom-sections";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { EmojiTooltip } from "@/components/ui/emoji-tooltip";
 
 interface ReadmeFormProps {
   onSubmit: (data: ReadmeFormData) => void;
@@ -142,7 +143,14 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
         />
 
         <div className="space-y-2">
-          <FormLabel>Programming Languages</FormLabel>
+          <div className="flex items-center">
+            <FormLabel>Programming Languages</FormLabel>
+            <EmojiTooltip 
+              emoji="💻" 
+              content="List the programming languages you're proficient in, each with a skill level."
+              className="ml-2"
+            />
+          </div>
           {languagesArray.fields.map((field, index) => (
             <div key={field.id} className="flex gap-2">
               <FormField
@@ -227,7 +235,14 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
         </div>
 
         <div className="space-y-2">
-          <FormLabel>Skills</FormLabel>
+          <div className="flex items-center">
+            <FormLabel>Skills</FormLabel>
+            <EmojiTooltip 
+              emoji="🛠️" 
+              content="List your technical and soft skills to showcase your capabilities to potential employers."
+              className="ml-2"
+            />
+          </div>
           {skillsArray.fields.map((field, index) => (
             <div key={field.id} className="flex gap-2">
               <FormField
@@ -271,7 +286,14 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
             name="showGitHubStats"
             render={({ field }) => (
               <FormItem className="flex items-center justify-between">
-                <FormLabel>Show GitHub Statistics</FormLabel>
+                <div className="flex items-center">
+                  <FormLabel>Show GitHub Statistics</FormLabel>
+                  <EmojiTooltip 
+                    emoji="📊" 
+                    content="Displays your GitHub statistics including stars, commits, and contributions."
+                    className="ml-2"
+                  />
+                </div>
                 <FormControl>
                   <Switch
                     checked={field.value}
@@ -287,7 +309,14 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
             name="showTrophies"
             render={({ field }) => (
               <FormItem className="flex items-center justify-between">
-                <FormLabel>Show GitHub Trophies</FormLabel>
+                <div className="flex items-center">
+                  <FormLabel>Show GitHub Trophies</FormLabel>
+                  <EmojiTooltip 
+                    emoji="🏆" 
+                    content="Displays achievement trophies based on your GitHub activity and contributions."
+                    className="ml-2"
+                  />
+                </div>
                 <FormControl>
                   <Switch
                     checked={field.value}
@@ -303,7 +332,14 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
             name="showLanguageStats"
             render={({ field }) => (
               <FormItem className="flex items-center justify-between">
-                <FormLabel>Show Language Statistics</FormLabel>
+                <div className="flex items-center">
+                  <FormLabel>Show Language Statistics</FormLabel>
+                  <EmojiTooltip 
+                    emoji="🔍" 
+                    content="Visualizes the programming languages you use most frequently in your repositories."
+                    className="ml-2"
+                  />
+                </div>
                 <FormControl>
                   <Switch
                     checked={field.value}
@@ -319,7 +355,14 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
             name="showStreak"
             render={({ field }) => (
               <FormItem className="flex items-center justify-between">
-                <FormLabel>Show Contribution Streak</FormLabel>
+                <div className="flex items-center">
+                  <FormLabel>Show Contribution Streak</FormLabel>
+                  <EmojiTooltip 
+                    emoji="🔥" 
+                    content="Showcases your GitHub contribution streak - how many days in a row you've been active."
+                    className="ml-2"
+                  />
+                </div>
                 <FormControl>
                   <Switch
                     checked={field.value}
@@ -358,7 +401,14 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
         </div>
 
         <div className="space-y-2">
-          <FormLabel>Social Links</FormLabel>
+          <div className="flex items-center">
+            <FormLabel>Social Links</FormLabel>
+            <EmojiTooltip 
+              emoji="🔗" 
+              content="Add links to your social media profiles so others can connect with you across platforms."
+              className="ml-2"
+            />
+          </div>
           {socialLinksArray.fields.map((field, index) => (
             <div key={field.id} className="flex gap-2">
               <FormField
@@ -434,7 +484,14 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
         </div>
 
         <div className="space-y-2">
-          <FormLabel>Projects</FormLabel>
+          <div className="flex items-center">
+            <FormLabel>Projects</FormLabel>
+            <EmojiTooltip 
+              emoji="📂" 
+              content="Showcase your best projects with descriptions and links to the repositories or live demos."
+              className="ml-2"
+            />
+          </div>
           {projectsArray.fields.map((field, index) => (
             <div key={field.id} className="space-y-2 p-4 border rounded-md">
               <FormField
@@ -503,10 +560,42 @@ export function ReadmeForm({ onSubmit }: ReadmeFormProps) {
           
           <Tabs defaultValue="language" className="w-full">
             <TabsList className="grid grid-cols-4 mb-4">
-              <TabsTrigger value="language">Language</TabsTrigger>
-              <TabsTrigger value="github">GitHub API</TabsTrigger>
-              <TabsTrigger value="project">Project Type</TabsTrigger>
-              <TabsTrigger value="custom">Custom Sections</TabsTrigger>
+              <TabsTrigger value="language" className="relative group">
+                Language
+                <EmojiTooltip 
+                  emoji="🌐" 
+                  content="Translates your README content into different languages to reach a global audience."
+                  side="bottom"
+                  className="absolute -top-2 -right-2"
+                />
+              </TabsTrigger>
+              <TabsTrigger value="github" className="relative group">
+                GitHub API
+                <EmojiTooltip 
+                  emoji="⚡" 
+                  content="Connect to GitHub API to automatically pull your profile data and repository information."
+                  side="bottom"
+                  className="absolute -top-2 -right-2"
+                />
+              </TabsTrigger>
+              <TabsTrigger value="project" className="relative group">
+                Project Type
+                <EmojiTooltip 
+                  emoji="🔍" 
+                  content="Automatically detect your project type and suggest appropriate technology stack listings."
+                  side="bottom"
+                  className="absolute -top-2 -right-2"
+                />
+              </TabsTrigger>
+              <TabsTrigger value="custom" className="relative group">
+                Custom Sections
+                <EmojiTooltip 
+                  emoji="✏️" 
+                  content="Add your own custom-titled sections to the README with specialized content."
+                  side="bottom"
+                  className="absolute -top-2 -right-2"
+                />
+              </TabsTrigger>
             </TabsList>
             
             <TabsContent value="language" className="space-y-4">
