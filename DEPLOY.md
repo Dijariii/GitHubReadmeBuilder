@@ -1,64 +1,100 @@
-# Deployment Guide for Readme Generator
+# Deploying to Vercel
 
-This guide explains how to deploy the Readme Generator application to Vercel.
+This document provides comprehensive instructions for deploying the GitHub README Generator to Vercel.
 
 ## Prerequisites
 
-- A [Vercel](https://vercel.com) account
-- Git repository for the project (e.g., GitHub, GitLab, etc.)
+- A Vercel account (can be created for free at [vercel.com](https://vercel.com))
+- Your project must be hosted in a Git repository (GitHub, GitLab, or Bitbucket)
 
 ## Deployment Steps
 
-### 1. Prepare for Vercel Deployment
+### Option 1: Using the Vercel Dashboard
 
-The project includes a `vercel.json` configuration file that has been pre-configured for deployment to Vercel. This file tells Vercel how to build and deploy your application.
+1. Log in to your Vercel account
+2. Click "Add New..." → "Project" button on the dashboard
+3. Import your Git repository
+4. Configure the project:
+   - **Framework Preset**: Leave as "Other" or select "Vite" if available
+   - **Build Command**: `node vercel-build.js`
+   - **Output Directory**: `dist`
+   - **Install Command**: Leave default (`npm install` or `yarn install`)
+5. Click "Deploy" button
 
-### 2. Connect to Vercel
+### Option 2: Using Vercel CLI
 
-1. Push your code to a Git repository if you haven't already
-2. Log in to your Vercel account
-3. Click "New Project"
-4. Import your repository from GitHub, GitLab, or Bitbucket
-5. Select the repository containing this project
+1. Install Vercel CLI globally:
+   ```
+   npm install -g vercel
+   ```
 
-### 3. Configure Project Settings
+2. Log in to your Vercel account:
+   ```
+   vercel login
+   ```
 
-When configuring the project in Vercel:
+3. Navigate to your project directory and run:
+   ```
+   vercel
+   ```
 
-- **Framework Preset**: Select "Other"
-- **Build Command**: Set this to: `npx tsx vercel-build.ts`
-- **Output Directory**: Use the default: `dist`
-- **Install Command**: Use the default: `npm install`
-
-### 4. Environment Variables
-
-If your application requires any environment variables, add them in the Vercel project settings.
-
-### 5. Deploy
-
-Click "Deploy" to start the deployment process. Vercel will build and deploy your application.
+4. Follow the interactive prompts:
+   - When asked about the build command, enter: `node vercel-build.js`
+   - When asked about the output directory, enter: `dist`
 
 ## Troubleshooting
 
-If you encounter any issues during deployment:
+If you encounter any issues with your deployment, check the following:
 
-1. Check the build logs in Vercel for any errors
-2. Ensure all dependencies are correctly listed in `package.json`
-3. Verify your `vercel.json` configuration is correct
+1. **Build Errors**:
+   - Verify that the `vercel-build.js` file exists in your repository
+   - Check Vercel's build logs for any error messages
 
-## Continuous Deployment
+2. **Routing Issues**:
+   - Ensure that `vercel.json` is correctly configured with the proper rewrites and redirects
+   - Make sure both the client and API are being built correctly
 
-Vercel automatically sets up continuous deployment from your Git repository. Any changes pushed to your main branch will trigger a new deployment.
+3. **Blank Page/404 Errors**:
+   - Check that the output directory structure matches what's expected in `dist`
+   - Verify that the client-side routing is properly configured
 
-## Custom Domain (Optional)
+4. **API Errors**:
+   - Ensure the API endpoints are correctly formatted
+   - Check the serverless function setup in `dist/api/index.js`
 
-To use a custom domain:
+5. **Source Code Displayed Instead of Rendered App**:
+   - This is often caused by incorrect build configuration or missing files
+   - Solution: 
+     - Verify the `vercel-build.js` file is properly creating the dist folder
+     - Check that `vercel.json` rewrites are properly configured
+     - Ensure your `index.html` file correctly loads the bundled JavaScript
+     - Try manually triggering a new deployment after updating configuration
 
-1. Go to your project settings in Vercel
-2. Navigate to the "Domains" section
-3. Add your custom domain and follow the verification steps
+## Environment Variables
 
-## Resources
+If your application requires environment variables:
 
-- [Vercel Documentation](https://vercel.com/docs)
-- [Vercel CLI](https://vercel.com/cli) for local testing
+1. Go to your project settings in the Vercel dashboard
+2. Navigate to the "Environment Variables" section
+3. Add your variables as key-value pairs
+4. Be sure to include any API keys or secrets required by your application
+
+## Custom Domains
+
+To add a custom domain to your Vercel deployment:
+
+1. Go to your project in the Vercel dashboard
+2. Click on "Settings" → "Domains"
+3. Add your domain and follow the instructions for DNS configuration
+
+## Automatic Deployments
+
+Vercel automatically deploys your application whenever changes are pushed to your Git repository. You can configure this behavior in:
+
+1. Project Settings → Git
+2. Under "Production Branch," set your main branch (e.g., `main` or `master`)
+3. Optionally enable/disable preview deployments for pull requests
+
+---
+
+If you encounter persistent issues, please contact [dejxhar@gmail.com](mailto:dejxhar@gmail.com) for assistance.

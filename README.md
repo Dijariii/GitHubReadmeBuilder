@@ -59,33 +59,24 @@ This application is ready for deployment on Vercel:
 4. Create a new project in Vercel and select your repository
 5. Update the settings:
    - Framework: Other
-   - Build Command: npx tsx vercel-build.ts
-   - Output Directory: dist
+   - Build Command: `node vercel-build.js`
+   - Output Directory: `dist`
 6. Click "Deploy" and wait for the build to complete
 7. Your README generator is now live!
 
-> **Note**: The project includes a custom `vercel.json` configuration file and a special `vercel-build.ts` script that handles all the necessary build steps for proper deployment.
+> **Note**: The project includes a custom `vercel.json` configuration file and a special `vercel-build.js` script that handles all the necessary build steps for proper deployment.
 
-> **Note**: The project includes a custom `vercel.json` configuration file and a special `vercel-build.ts` script that handles all the necessary build steps for proper deployment.
+### Troubleshooting Deployment Issues
 
-## 🚀 Deployment
+If you encounter issues with your Vercel deployment (like seeing source code instead of the rendered application):
 
-### Deploying to Vercel
+1. Verify that the `vercel-build.js` file exists in your repository
+2. Make sure your `vercel.json` file has the correct configuration
+3. In the Vercel project settings, confirm that the build command is set to `node vercel-build.js`
+4. Check the build logs for any errors
+5. Try triggering a new deployment after updating the configuration
 
-This application is ready for deployment on Vercel:
-
-1. Fork or clone this repository to your GitHub account
-2. Sign up for a [Vercel](https://vercel.com) account if you don't have one
-3. Connect your GitHub account to Vercel
-4. Create a new project in Vercel and select your repository
-5. Update the settings:
-   - Framework: Other
-   - Build Command: npx tsx vercel-build.ts
-   - Output Directory: dist
-6. Click "Deploy" and wait for the build to complete
-7. Your README generator is now live!
-
-> **Note**: The project includes a custom `vercel.json` configuration file and a special `vercel-build.ts` script that handles all the necessary build steps for proper deployment.
+For more detailed troubleshooting steps, please refer to `DEPLOY.txt` in the repository.
 
 ## 🌟 Usage Guide
 
