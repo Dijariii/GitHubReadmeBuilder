@@ -23,7 +23,7 @@ import {
 import { Plus, Trash2 } from "lucide-react";
 import * as SiIcons from "react-icons/si";
 import type { IconType } from "react-icons";
-import React, { useEffect } from 'react';
+import React from 'react';
 import { AnalyticsConfig } from "./analytics-config";
 import { LanguageSelector } from "./language-selector";
 import { GitHubIntegration } from "./github-integration";

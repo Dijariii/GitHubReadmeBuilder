@@ -7,6 +7,7 @@ import Home from "@/pages/home";
 import Guide from "@/pages/guide";
 import { Logo } from "@/components/ui/logo";
 import { SiGithub } from "react-icons/si";
+import React, { memo } from 'react';
 
 function Nav() {
   return (
@@ -34,8 +35,6 @@ function Nav() {
     </nav>
   );
 }
-
-import React, { memo } from 'react';
 
 const Router = memo(function Router() {
   return (
