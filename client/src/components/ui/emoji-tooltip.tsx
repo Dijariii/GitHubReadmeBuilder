@@ -37,7 +37,7 @@ export function EmojiTooltip({
         </TooltipTrigger>
         <TooltipContent 
           side={side} 
-          className="max-w-sm p-3 text-sm bg-white border border-gray-200 rounded-md shadow-md dark:bg-gray-800 dark:border-gray-700"
+          className="max-w-sm p-3 text-sm bg-gray-800 text-white border border-gray-700 rounded-md shadow-md"
         >
           <div className="flex items-start">
             <span className="mr-2 text-lg">{emoji}</span>
