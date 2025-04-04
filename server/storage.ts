@@ -122,24 +122,33 @@ For support: dejxhar@gmail.com
   }
 
   async getTemplateByShareableId(shareableId: string): Promise<Template | undefined> {
-    for (const template of this.templates.values()) {
-      if (template.shareableId === shareableId) {
-        return template;
-      }
-    }
-    return undefined;
+    // Convert iterator to array first to fix TypeScript error
+    const templatesArray = Array.from(this.templates.values());
+    
+    return templatesArray.find(template => template.shareableId === shareableId);
   }
 
   async createTemplate(template: InsertTemplate): Promise<Template> {
     const id = this.currentId++;
+    
+    // Convert sections to proper string array to fix type issue
+    const sections: string[] = Array.isArray(template.sections) 
+      ? [...template.sections].map(item => String(item))
+      : [];
+      
+    // Convert tags to proper string array to fix type issue
+    const tags: string[] = Array.isArray(template.tags) 
+      ? [...template.tags].map(item => String(item))
+      : [];
+    
     const newTemplate: Template = {
       id,
       name: template.name,
       content: template.content,
-      sections: template.sections,
+      sections: sections,
       userId: template.userId || null,
       isPublic: template.isPublic || false,
-      tags: template.tags || [],
+      tags: tags,
       likes: 0,
       shareableId: nanoid(10),
       createdAt: new Date(),
@@ -152,10 +161,32 @@ For support: dejxhar@gmail.com
   async updateTemplate(id: number, updates: Partial<InsertTemplate>): Promise<Template | undefined> {
     const template = this.templates.get(id);
     if (!template) return undefined;
-
+    
+    // Handle sections in updates specially to ensure proper typing
+    let updatedSections = template.sections;
+    if (updates.sections) {
+      updatedSections = Array.isArray(updates.sections) 
+        ? [...updates.sections].map(String) 
+        : template.sections;
+    }
+    
+    // Handle tags in updates specially to ensure proper typing
+    let updatedTags = template.tags;
+    if (updates.tags) {
+      updatedTags = Array.isArray(updates.tags) 
+        ? [...updates.tags].map(String) 
+        : template.tags;
+    }
+    
+    // Create a properly typed updated template
     const updatedTemplate: Template = {
       ...template,
-      ...updates,
+      name: updates.name || template.name,
+      content: updates.content || template.content,
+      sections: updatedSections,
+      userId: updates.userId !== undefined ? updates.userId : template.userId,
+      isPublic: updates.isPublic !== undefined ? updates.isPublic : template.isPublic,
+      tags: updatedTags,
       updatedAt: new Date()
     };
     
@@ -190,10 +221,14 @@ For support: dejxhar@gmail.com
     }
     
     // Filter by tags
-    if (params.tags && params.tags.length > 0) {
-      filteredTemplates = filteredTemplates.filter(t => 
-        params.tags.some(tag => t.tags.includes(tag))
-      );
+    if (params.tags && params.tags.length > 0 && Array.isArray(params.tags)) {
+      filteredTemplates = filteredTemplates.filter(t => {
+        // Only process if t.tags is not null and is an array
+        if (t.tags && Array.isArray(t.tags)) {
+          return params.tags!.some(tag => t.tags!.includes(tag));
+        }
+        return false;
+      });
     }
     
     const total = filteredTemplates.length;
@@ -210,9 +245,12 @@ For support: dejxhar@gmail.com
     const template = this.templates.get(id);
     if (!template) return undefined;
     
+    // Safely handle likes count with null check
+    const currentLikes = template.likes || 0;
+    
     const updatedTemplate: Template = {
       ...template,
-      likes: template.likes + 1
+      likes: currentLikes + 1
     };
     
     this.templates.set(id, updatedTemplate);

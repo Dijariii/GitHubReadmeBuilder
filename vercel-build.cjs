@@ -9,7 +9,7 @@ execSync('npx vite build', { stdio: 'inherit' });
 
 // Build the server API
 console.log('Building server API...');
-execSync('npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist/api', { stdio: 'inherit' });
+execSync('npx esbuild server/index.ts server/routes.ts server/storage.ts shared/schema.ts --platform=node --packages=external --bundle --format=esm --outdir=dist/server', { stdio: 'inherit' });
 
 // Ensure the api directory exists
 if (!fs.existsSync('dist/api')) {
@@ -18,10 +18,24 @@ if (!fs.existsSync('dist/api')) {
 
 // Create a simple Vercel serverless function handler
 const vercelHandler = `
-// Serverless function for Vercel
+import { createServer } from 'http';
+import { parse } from 'url';
+import express from 'express';
+import compression from 'compression';
+import { registerRoutes } from '../server/routes.js';
+
+// Create Express app
+const app = express();
+app.use(compression());
+app.use(express.json());
+
+// Register API routes
+registerRoutes(app);
+
+// Export the Express API
 export default function handler(req, res) {
-  // Redirect to the client-side React app
-  res.redirect('/');
+  // Convert Vercel Edge Function request/response to Express
+  return app(req, res);
 }
 `;
 
@@ -43,11 +57,15 @@ if (!fs.existsSync('dist/index.html')) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GitHub README Generator</title>
-    <link rel="stylesheet" href="/assets/index.css" />
+    <link rel="stylesheet" href="./assets/index.css" />
+    <!-- Add base href for proper asset loading -->
+    <base href="/" />
+    <!-- Add fallback meta tags -->
+    <meta name="description" content="GitHub README Generator - Create beautiful GitHub profile READMEs with ease" />
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/assets/index.js"></script>
+    <script type="module" src="./assets/index.js"></script>
   </body>
 </html>`;
       fs.writeFileSync('dist/index.html', fallbackHtml, 'utf-8');

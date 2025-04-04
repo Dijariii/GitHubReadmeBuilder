@@ -47,27 +47,34 @@ This document provides comprehensive instructions for deploying the GitHub READM
 If you encounter any issues with your deployment, check the following:
 
 1. **Build Errors**:
-   - Verify that the `vercel-build.js` file exists in your repository
+   - Verify that the `vercel-build.cjs` file exists in your repository
    - Check Vercel's build logs for any error messages
+   - Make sure all dependencies are correctly installed
 
 2. **Routing Issues**:
-   - Ensure that `vercel.json` is correctly configured with the proper rewrites and redirects
-   - Make sure both the client and API are being built correctly
+   - Ensure that `vercel.json` is correctly configured with the proper routes and rewrites
+   - The updated configuration includes separate handling for static assets and API routes
+   - Verify that cache headers are correctly set for optimal performance
 
 3. **Blank Page/404 Errors**:
    - Check that the output directory structure matches what's expected in `dist`
-   - Verify that the client-side routing is properly configured
+   - Verify that all assets are properly referenced with correct paths
+   - Ensure the base href is set correctly in index.html
+   - Check for any 404 errors in the browser console for missing assets
 
 4. **API Errors**:
    - Ensure the API endpoints are correctly formatted
    - Check the serverless function setup in `dist/api/index.js`
+   - Verify that the Express app is properly configured in the API handler
+   - Check that all required server modules are bundled correctly in dist/server
 
 5. **Source Code Displayed Instead of Rendered App**:
    - This is often caused by incorrect build configuration or missing files
    - Solution: 
-     - Verify the `vercel-build.js` file is properly creating the dist folder
-     - Check that `vercel.json` rewrites are properly configured
-     - Ensure your `index.html` file correctly loads the bundled JavaScript
+     - Verify the build script is properly creating the dist folder with all required files
+     - Check that `vercel.json` routes are properly configured
+     - Ensure your `index.html` file correctly loads the bundled JavaScript with the right paths
+     - Make sure MIME types are correctly set
      - Try manually triggering a new deployment after updating configuration
 
 ## Environment Variables
@@ -95,9 +102,6 @@ Vercel automatically deploys your application whenever changes are pushed to you
 2. Under "Production Branch," set your main branch (e.g., `main` or `master`)
 3. Optionally enable/disable preview deployments for pull requests
 
----
-
-If you encounter persistent issues, please contact [dejxhar@gmail.com](mailto:dejxhar@gmail.com) for assistance.
 ## Handling ESM vs CommonJS Issues
 
 If you encounter module format errors during deployment, such as:
@@ -112,3 +116,16 @@ This indicates a conflict between ES modules and CommonJS. We provide two build 
 
 By default, our deployment configuration in `vercel.json` uses the CommonJS version. If you need to use the ES Module version, ensure your `package.json` does not have `"type": "module"` or modify `vercel.json` to use `vercel-build.js` instead.
 
+## API Integration
+
+The application includes server-side API endpoints powered by Express. The deployment process:
+
+1. Bundles server files into the `dist/server` directory
+2. Creates a serverless function in `dist/api/index.js` that adapts Express to Vercel's serverless environment
+3. Configures routing in `vercel.json` to direct API requests to this function
+
+Make sure your application correctly references API endpoints with the proper base path.
+
+---
+
+If you encounter persistent issues, please contact [dejxhar@gmail.com](mailto:dejxhar@gmail.com) for assistance.
