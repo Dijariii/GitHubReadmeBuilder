@@ -71,8 +71,17 @@ export function ReadmeForm({ onSubmit, onChange }: ReadmeFormProps) {
         theme: "flat",
         row: 2,
         column: 3
+      },
+      analytics: {
+        showContributionGraph: true,
+        showActivityGraph: true,
+        showCommitStats: true,
+        timeRange: "last_30_days",
+        graphStyle: "github",
+        includePrivateRepos: false
       }
     },
+    mode: "onChange"
   });
   
   // Set up watch for form changes to enable live preview
@@ -80,9 +89,16 @@ export function ReadmeForm({ onSubmit, onChange }: ReadmeFormProps) {
     if (!onChange) return;
     
     const subscription = form.watch((value) => {
-      // Only trigger onChange when we have valid data
-      if (value.name && value.githubUsername && value.bio) {
-        onChange(form.getValues() as ReadmeFormData);
+      try {
+        // Only trigger onChange when we have valid data
+        if (value.name && value.githubUsername && value.bio) {
+          const formData = form.getValues();
+          if (formData) {
+            onChange(formData as ReadmeFormData);
+          }
+        }
+      } catch (error) {
+        console.error("Error in form watch:", error);
       }
     });
     
@@ -91,27 +107,35 @@ export function ReadmeForm({ onSubmit, onChange }: ReadmeFormProps) {
 
   const skillsArray = useFieldArray({
     control: form.control,
-    name: "skills" as any, // Type assertion to handle array of strings
+    name: "skills"
   });
 
   const languagesArray = useFieldArray({
     control: form.control,
-    name: "programmingLanguages",
+    name: "programmingLanguages"
   });
 
   const socialLinksArray = useFieldArray({
     control: form.control,
-    name: "socialLinks",
+    name: "socialLinks"
   });
 
   const projectsArray = useFieldArray({
     control: form.control,
-    name: "projects",
+    name: "projects"
   });
+
+  const handleSubmit = async (data: ReadmeFormData) => {
+    try {
+      await onSubmit(data);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="name"

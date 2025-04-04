@@ -8,6 +8,8 @@ import Guide from "@/pages/guide";
 import { Logo } from "@/components/ui/logo";
 import { SiGithub } from "react-icons/si";
 import React, { memo } from 'react';
+import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 function Nav() {
   return (
@@ -22,6 +24,7 @@ function Nav() {
               How to Create
             </span>
           </Link>
+          <ThemeToggle />
           <a 
             href="https://github.com/Dijariii/Readme-Gen" 
             target="_blank" 
@@ -53,10 +56,12 @@ const Router = memo(function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router />
-      <Toaster />
-    </QueryClientProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <QueryClientProvider client={queryClient}>
+        <Router />
+        <Toaster />
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 
